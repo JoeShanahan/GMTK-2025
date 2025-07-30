@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Gmtk2025.Connectors
 {
-    public class Swapper : MonoBehaviour
+    public class Swapper : Connector
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

@@ -72,6 +72,13 @@ namespace Gmtk2025
             Vector3 newPos = _currentLoop.LoopSpaceToPosition(newLoopSpace);
             newPos.z = transform.position.z;
             transform.position = newPos;
+
+            bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainder, out Connector connector);
+
+            if (didPassConnector)
+            {
+                connector.OnProjectilePassed(this, _currentLoop);
+            }
         }
     }
 }

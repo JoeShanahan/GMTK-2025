@@ -4,8 +4,13 @@ namespace Gmtk2025
 {
     // TODO
     // Connectors can't be placed too close to each other
-    public class Connector : MonoBehaviour
+    public abstract class Connector : MonoBehaviour
     {
+        public virtual void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
+        {
+            transform.localScale *= 1.5f;
+        }
+        
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {

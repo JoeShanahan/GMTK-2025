@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 225374022}
   - component: {fileID: 225374025}
   m_Layer: 0
-  m_Name: PlacedLoop (1)
+  m_Name: PlacedLoop:Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -339,6 +339,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _line: {fileID: 225374022}
   _radius: 1
+  _connectors:
+  - Connector: {fileID: 622806275}
+    Offset: 0.5
+    OtherLoop: {fileID: 225374023}
 --- !u!4 &225374024
 Transform:
   m_ObjectHideFlags: 0
@@ -1687,7 +1691,7 @@ GameObject:
   - component: {fileID: 1815256557}
   - component: {fileID: 1815256560}
   m_Layer: 0
-  m_Name: PlacedLoop
+  m_Name: PlacedLoop:White
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1845,6 +1849,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _line: {fileID: 1815256557}
   _radius: 2
+  _connectors:
+  - Connector: {fileID: 622806275}
+    Offset: 0
+    OtherLoop: {fileID: 225374023}
 --- !u!4 &1815256559
 Transform:
   m_ObjectHideFlags: 0

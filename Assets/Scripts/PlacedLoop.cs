@@ -21,7 +21,7 @@ namespace Gmtk2025
 
         [SerializeField, Range(0, 20)] private float _radius = 1;
 
-        [SerializeField] private List<Connector> _connectors;
+        [SerializeField] private List<ConnectorInfo> _connectors;
 
         private CircleCollider2D _collider;
         
@@ -44,18 +44,52 @@ namespace Gmtk2025
 
         public float Circumference => _radius * TAU;
 
-        // 0 is the absolute top, 0.25 is the absolute right edge, 0.5 is the absolute bottom
+        // 0 is the right most point, 0.25 is the bottom, 0.5 is left most point
         public float PositionToLoopSpace(Vector3 position)
         {
             Vector2 offset = position - transform.position;
             float angle = Mathf.Atan2(offset.y, offset.x);
-            return -angle / TAU;
+            return ((-angle / TAU) + 1) % 1;
         }
 
         public Vector3 LoopSpaceToPosition(float loopSpace)
         {
             float angle = -loopSpace * TAU;
             return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * _radius;
+        }
+
+        // Checks to see if there is a connector between [loopSpaceStart] and [loopSpaceEnd]
+        // If so, return the remaining distance after it (in loop space)
+        public bool WillPassConnector(float loopSpaceStart, float absoluteDistance, out float remainder, out Connector connector)
+        {
+            remainder = 0;
+            connector = null;
+            
+            if (_connectors.Count == 0)
+                return false;
+
+            float loopSpaceEnd = loopSpaceStart + (absoluteDistance / Circumference);
+            float min = Mathf.Min(loopSpaceStart, loopSpaceEnd);
+            float max = Mathf.Max(loopSpaceStart, loopSpaceEnd);
+
+            foreach (ConnectorInfo info in _connectors)
+            {
+                // Need to check all three because:
+                //   0 should be between 0.9 and 1.1
+                //   0.99 should be between 0.1 and -0.1
+                bool a = info.Offset >= min && info.Offset <= max;
+                bool b = info.Offset + 1 >= min && info.Offset + 1 <= max;
+                bool c = info.Offset - 1 >= min && info.Offset - 1 <= max;
+
+                if (a || b || c)
+                {
+                    connector = info.Connector;
+                    // remainder = blah blah
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         [ContextMenu("Sync!")]
