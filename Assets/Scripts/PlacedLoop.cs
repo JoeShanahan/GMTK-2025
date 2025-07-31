@@ -64,12 +64,12 @@ namespace Gmtk2025
             SyncVisuals();
         }
         
+        // Returns a tangent, but is only accurate for clockwise (positive) movement
         public Vector2 GetTangent(Vector2 worldPosition)
         {
             Vector2 offset = worldPosition - new Vector2(transform.position.x, transform.position.y);
             float angleRad = Mathf.Atan2(offset.y, offset.x);
             
-            // Unit tangent vector (perpendicular to radius)
             float x = -Mathf.Sin(angleRad);
             float y =  Mathf.Cos(angleRad);
             return new Vector2(x, y).normalized;
