@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace Gmtk2025
@@ -6,13 +7,15 @@ namespace Gmtk2025
     {
         public bool IsOnLoop => _currentLoop != null;
 
-        // Positive = clockwise
-        private float _speed;
+        private float _angularSpeed;
+        private float _loopAngle;
         
         private PlacedLoop _currentLoop;
         private Rigidbody2D _rb;
         private CircleCollider2D _collider;
         
+        private const float TAU = Mathf.PI * 2;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -22,17 +25,20 @@ namespace Gmtk2025
 
         private void SwapToOnLoop(PlacedLoop loop)
         {
-            // TODO use the dot product of the current velocity and the tangent to calculate speed
-            // TODO negative speed if going counter-clockwise
-            _speed = 5;
-            
-            _rb.simulated = false;
-            _currentLoop = loop;
+            _loopAngle = loop.PositionToLoopSpace(transform.position);
+            Vector3 loopTangent = loop.GetClockwiseTangentVector(_loopAngle);
 
-            float loopSpace = loop.PositionToLoopSpace(transform.position);
-            Vector3 newPos = loop.LoopSpaceToPosition(loopSpace);
+            Vector3 speedOntoLoop = Vector3.Project(_rb.linearVelocity, loopTangent);
+            float sign = Mathf.Sign(Vector3.Dot(_rb.linearVelocity, loopTangent));
+
+            _angularSpeed = sign * speedOntoLoop.magnitude / (loop.Radius * TAU);
+
+            Vector3 newPos = loop.LoopSpaceToPosition(_loopAngle);
             newPos.z = transform.position.z;
             transform.position = newPos;
+
+            _rb.simulated = false;
+            _currentLoop = loop;
         }
 
         private void SwapToFree()
@@ -65,40 +71,29 @@ namespace Gmtk2025
         {
             if (IsOnLoop == false)
                 return;
-            
-            // TODO increase speed by using Physics2D.gravity, direction of travel, and Time.deltaTime
-            
-            Move(1.0f);
 
-            
+            UpdateSpeed();
+            Move();
         }
 
-        private void Move(float moveRemaining, int recursionDepth=0)
+        private void Move()
         {
-            if (recursionDepth > 99)
-            {
-                Debug.LogError("Hit recursion of 99 oops!");
-                return;
-            }
+            _loopAngle += _angularSpeed * Time.deltaTime;
             
-            float speedPerFrame = _speed * Time.deltaTime * moveRemaining;
-            float currentLoopSpace = _currentLoop.PositionToLoopSpace(transform.position);
-            
-            float newLoopSpace = ((currentLoopSpace + (speedPerFrame / _currentLoop.Circumference)) + 100) % 1;
-            Vector3 newPos = _currentLoop.LoopSpaceToPosition(newLoopSpace);
+            Vector3 newPos = _currentLoop.LoopSpaceToPosition(_loopAngle);
             newPos.z = transform.position.z;
             transform.position = newPos;
+        }
 
-            bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainingDistance, out Connector connector);
+        private void UpdateSpeed()
+        {
+            Vector3 loopTangent = _currentLoop.GetClockwiseTangentVector(_loopAngle);
+            Vector3 gravityAlongLoop = Vector3.Project(Physics.gravity, loopTangent);
+            float sign = Mathf.Sign(Vector3.Dot(loopTangent, Physics.gravity));
 
-            if (didPassConnector)
-            {
-                transform.position = connector.transform.position;
-                float remainingPercent = remainingDistance / speedPerFrame;
-                connector.OnProjectilePassed(this, _currentLoop);
-                
-                Move(remainingPercent, recursionDepth + 1);
-            }
+            float angularAcceleration = sign * gravityAlongLoop.magnitude / (_currentLoop.Radius * TAU);
+
+            _angularSpeed += angularAcceleration * Time.deltaTime;
         }
     }
 }

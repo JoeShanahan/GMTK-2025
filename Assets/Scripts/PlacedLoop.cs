@@ -27,6 +27,8 @@ namespace Gmtk2025
         
         private const int POINT_COUNT = 32;
 
+        public float Radius => _radius;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -44,18 +46,24 @@ namespace Gmtk2025
 
         public float Circumference => _radius * TAU;
 
+        public Vector3 GetClockwiseTangentVector(float loopSpace)
+        {
+            float angleDeg = loopSpace * TAU;
+            return new(Mathf.Cos(angleDeg), -Mathf.Sin(angleDeg));
+        }
+
         // 0 is the right most point, 0.25 is the bottom, 0.5 is left most point
         public float PositionToLoopSpace(Vector3 position)
         {
             Vector2 offset = position - transform.position;
-            float angle = Mathf.Atan2(offset.y, offset.x);
-            return ((-angle / TAU) + 1) % 1;
+            float angle = Mathf.Atan2(offset.x, offset.y);
+            return angle / TAU;
         }
 
         public Vector3 LoopSpaceToPosition(float loopSpace)
         {
-            float angle = -loopSpace * TAU;
-            return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * _radius;
+            float angle = loopSpace * TAU;
+            return new Vector3(Mathf.Sin(angle), Mathf.Cos(angle)) * _radius;
         }
 
         // Checks to see if there is a connector between [loopSpaceStart] and [loopSpaceEnd]
