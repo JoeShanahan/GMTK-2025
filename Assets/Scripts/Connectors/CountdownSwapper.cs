@@ -7,7 +7,7 @@ namespace Gmtk2025.Connectors
         [SerializeField] private int _maxValue = 3;
         [SerializeField] private int _currentValue;
         [SerializeField] private Transform[] _counters;
-        
+
         public override void SetParameter(int number)
         {
             _maxValue = number;

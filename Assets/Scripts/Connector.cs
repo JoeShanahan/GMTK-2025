@@ -19,7 +19,7 @@ namespace Gmtk2025
 
         [SerializeField] protected PlacedLoop _attachedLoop;
 
-        public void SetLoops(PlacedLoop parent, PlacedLoop child)
+public void SetLoops(PlacedLoop parent, PlacedLoop child)
         {
             _firstLoop = parent;
             _attachedLoop = child;
