@@ -27,11 +27,18 @@ namespace Gmtk2025
         
         private const int POINT_COUNT = 32;
 
+        public void InitFirstLoop(Vector2 position, float radius)
+        {
+            _radius = radius;
+            transform.localPosition = new Vector3(position.x, position.y, 0);
+            SyncVisuals();
+        }
+        
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             _collider = GetComponent<CircleCollider2D>();
-            Sync();
+            SyncVisuals();
         }
 
         // Update is called once per frame
@@ -101,7 +108,7 @@ namespace Gmtk2025
         }
 
         [ContextMenu("Sync!")]
-        public void Sync()
+        public void SyncVisuals()
         {
             Vector3[] positions = new Vector3[POINT_COUNT + 1];
 

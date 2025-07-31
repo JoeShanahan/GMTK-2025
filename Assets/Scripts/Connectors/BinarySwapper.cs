@@ -8,7 +8,12 @@ namespace Gmtk2025.Connectors
         [SerializeField] private Color _goColor;
         [SerializeField] private Color _stopColor;
         [SerializeField] private bool _canGo = true;
-
+        
+        public override void SetParameter(int number)
+        {
+            _canGo = number > 0;
+        }
+        
         private void Start()
         {
             SetColor();
