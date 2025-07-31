@@ -34,10 +34,31 @@ namespace Gmtk2025
             newPos.z = transform.position.z;
             transform.position = newPos;
         }
+        
+        public void SwapBetweenLoops(PlacedLoop fromLoop, PlacedLoop toLoop)
+        {
+            _speed *= -1;
+            
+            _currentLoop = toLoop;
+
+            float loopSpace = toLoop.PositionToLoopSpace(transform.position);
+            Vector3 newPos = toLoop.LoopSpaceToPosition(loopSpace);
+            newPos.z = transform.position.z;
+            transform.position = newPos;
+        }
+
+        public void LeaveLoop()
+        {
+            _rb.simulated = true;
+            _rb.linearVelocity = Vector3.up * 10; // TODO actually calculate
+            
+            _currentLoop = null;
+        }
 
         private void SwapToFree()
         {
             _rb.simulated = true;
+            _currentLoop = null;
         }
         
         private void OnTriggerStay2D(Collider2D other)
@@ -73,7 +94,7 @@ namespace Gmtk2025
             
         }
 
-        private void Move(float moveRemaining, int recursionDepth=0)
+        private void Move(float moveRemaining, int recursionDepth = 0, Connector toSkip = null)
         {
             if (recursionDepth > 99)
             {
@@ -91,13 +112,13 @@ namespace Gmtk2025
 
             bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainingDistance, out Connector connector);
 
-            if (didPassConnector)
+            if (didPassConnector && connector != toSkip) // we don't want to do the same connector twice in a row
             {
                 transform.position = connector.transform.position;
                 float remainingPercent = remainingDistance / speedPerFrame;
                 connector.OnProjectilePassed(this, _currentLoop);
                 
-                Move(remainingPercent, recursionDepth + 1);
+                Move(remainingPercent, recursionDepth + 1, connector);
             }
         }
     }

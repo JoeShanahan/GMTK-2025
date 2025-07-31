@@ -6,7 +6,7 @@ namespace Gmtk2025.Connectors
     {
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-            // TODO Launch!
+            projectile.LeaveLoop();
         }
     }
 }
