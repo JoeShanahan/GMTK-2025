@@ -342,7 +342,10 @@ MonoBehaviour:
   _connectors:
   - Connector: {fileID: 622806275}
     Offset: 0.5
-    OtherLoop: {fileID: 225374023}
+    OtherLoop: {fileID: 1815256558}
+  - Connector: {fileID: 320091130}
+    Offset: 0
+    OtherLoop: {fileID: 0}
 --- !u!4 &225374024
 Transform:
   m_ObjectHideFlags: 0
@@ -558,6 +561,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eab90836a22e4e4b9c85fee50194131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstLoop: {fileID: 0}
+  _attachedLoop: {fileID: 0}
 --- !u!212 &320091131
 SpriteRenderer:
   m_ObjectHideFlags: 0

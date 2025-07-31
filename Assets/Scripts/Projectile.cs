@@ -47,9 +47,18 @@ namespace Gmtk2025
             transform.position = newPos;
         }
 
+        public void LeaveLoop()
+        {
+            _rb.simulated = true;
+            _rb.linearVelocity = Vector3.up * 10; // TODO actually calculate
+            
+            _currentLoop = null;
+        }
+
         private void SwapToFree()
         {
             _rb.simulated = true;
+            _currentLoop = null;
         }
         
         private void OnTriggerStay2D(Collider2D other)
