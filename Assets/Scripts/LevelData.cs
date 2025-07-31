@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Gmtk2025
 {
@@ -27,5 +29,32 @@ namespace Gmtk2025
         public List<Vector2> Projectiles;
         public Vector2 StartingLoopPosition;
         public LoopData StartingLoop;
+
+        public string ToBase64()
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(this));
+            
+            using var output = new MemoryStream();
+            using (var gzip = new GZipStream(output, CompressionMode.Compress))
+            {
+                gzip.Write(bytes, 0, bytes.Length);
+            }
+            
+            return Convert.ToBase64String(output.ToArray());
+        }
+
+        public void FromBase64Overwrite(string base64)
+        {
+            byte[] compressedBytes = Convert.FromBase64String(base64);
+    
+            using var input = new MemoryStream(compressedBytes);
+            using var gzip = new GZipStream(input, CompressionMode.Decompress);
+            using var output = new MemoryStream();
+    
+            gzip.CopyTo(output);
+            string json = Encoding.UTF8.GetString(output.ToArray());
+    
+            JsonUtility.FromJsonOverwrite(json, this);
+        }
     }
 }
