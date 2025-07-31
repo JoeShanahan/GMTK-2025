@@ -7,12 +7,15 @@ namespace Gmtk2025
     public class PrefabFactory : ScriptableObject
     {
         [SerializeField] private GameObject _loopPrefab;
+        [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private GameObject _swapPrefab;
         [SerializeField] private GameObject _launchPrefab;
         [SerializeField] private GameObject _binaryPrefab;
         [SerializeField] private GameObject _countdownPrefab;
 
         public GameObject GetLoop() => _loopPrefab;
+        
+        public GameObject GetProjectile() => _projectilePrefab;
 
         public GameObject GetConnector(ConnectorType type)
         {

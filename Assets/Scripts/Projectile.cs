@@ -24,7 +24,7 @@ namespace Gmtk2025
         {
             // TODO use the dot product of the current velocity and the tangent to calculate speed
             // TODO negative speed if going counter-clockwise
-            _speed = 5;
+            _speed = 8;
             
             _rb.simulated = false;
             _currentLoop = loop;

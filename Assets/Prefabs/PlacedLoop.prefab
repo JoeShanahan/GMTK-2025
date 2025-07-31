@@ -48,10 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _line: {fileID: 5036745051145805563}
   _radius: 2
-  _connectors:
-  - Connector: {fileID: 0}
-    Offset: 0
-    OtherLoop: {fileID: 0}
+  _connectors: []
 --- !u!120 &5036745051145805563
 LineRenderer:
   serializedVersion: 2
@@ -188,7 +185,7 @@ LineRenderer:
     generateLightingData: 0
   m_MaskInteraction: 0
   m_UseWorldSpace: 0
-  m_Loop: 0
+  m_Loop: 1
   m_ApplyActiveColorSpace: 1
 --- !u!58 &5210866350470517471
 CircleCollider2D:

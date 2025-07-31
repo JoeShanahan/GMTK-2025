@@ -18,6 +18,12 @@ namespace Gmtk2025
         [SerializeField] protected PlacedLoop _firstLoop;
 
         [SerializeField] protected PlacedLoop _attachedLoop;
+
+        public void SetLoops(PlacedLoop parent, PlacedLoop child)
+        {
+            _firstLoop = parent;
+            _attachedLoop = child;
+        }
         
         public virtual void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {

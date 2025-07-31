@@ -25,12 +25,38 @@ namespace Gmtk2025
 
         private CircleCollider2D _collider;
         
-        private const int POINT_COUNT = 32;
+        private const int POINT_COUNT = 48;
 
-        public void InitFirstLoop(Vector2 position, float radius)
+        public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
+        {
+            _connectors.Add(new ConnectorInfo()
+            {
+                Connector = connector,
+                Offset = offset,
+                OtherLoop = otherLoop,
+            });
+        }
+        
+        public void InitFirstLoop(Vector3 position, float radius)
         {
             _radius = radius;
-            transform.localPosition = new Vector3(position.x, position.y, 0);
+            transform.localPosition = position;
+            SyncVisuals();
+        }
+
+        public void Init(PlacedLoop parentLoop, Connector connector, float radius)
+        {
+            Vector2 directionVector = connector.transform.position - parentLoop.transform.position;
+            directionVector.Normalize();
+
+            Vector3 pos = connector.transform.position;
+            pos.x += directionVector.x * radius;
+            pos.y += directionVector.y * radius;
+            pos.z = parentLoop.transform.position.z;
+            
+            transform.position = pos;
+            
+            _radius = radius;
             SyncVisuals();
         }
         

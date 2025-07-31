@@ -13,21 +13,23 @@ MonoBehaviour:
   m_Name: TestLevel
   m_EditorClassIdentifier: 
   Projectiles:
-  - {x: 0, y: 3}
-  - {x: 1, y: 3}
-  StartingLoopPosition: {x: -4, y: 0}
+  - {x: 0, y: 8}
+  - {x: 1, y: 8}
+  - {x: 2, y: 8}
+  - {x: 3, y: 8}
+  StartingLoopPosition: {x: 0, y: 2}
   StartingLoop:
     Radius: 4
     Connectors:
     - Type: 1
       LoopSpace: 0.333333
-      IsConnceted: 1
+      IsConnected: 1
       AttachedLoop:
         Radius: 3
         Connectors:
         - Type: 1
-          LoopSpace: 0.666666
-          IsConnceted: 1
+          LoopSpace: 0.5
+          IsConnected: 1
           AttachedLoop:
             Radius: 2
             Connectors: []

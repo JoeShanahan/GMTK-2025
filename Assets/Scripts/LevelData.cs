@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Gmtk2025
 {
@@ -19,7 +20,7 @@ namespace Gmtk2025
         {
             public ConnectorType Type;
             public float LoopSpace;
-            public bool IsConnceted;
+            public bool IsConnected;
             public LoopData AttachedLoop;
         }
 
