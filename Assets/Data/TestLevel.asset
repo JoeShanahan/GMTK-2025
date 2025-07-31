@@ -19,17 +19,24 @@ MonoBehaviour:
   - {x: 3, y: 8}
   StartingLoopPosition: {x: 0, y: 2}
   StartingLoop:
+    DoStartWith: 1
     Radius: 4
     Connectors:
     - Type: 1
+      Value: 0
       LoopSpace: 0.333333
+      DoStartWith: 0
       IsConnected: 1
       AttachedLoop:
+        DoStartWith: 0
         Radius: 3
         Connectors:
         - Type: 1
+          Value: 0
           LoopSpace: 0.5
+          DoStartWith: 0
           IsConnected: 1
           AttachedLoop:
+            DoStartWith: 1
             Radius: 2
             Connectors: []

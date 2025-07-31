@@ -148,11 +148,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af93a2975e2e4a7ba5657cccbb19d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentLevel: {fileID: 11400000, guid: eee79c07efa854975ace81aec00a64d7, type: 2}
+  _currentLevel: {fileID: 11400000, guid: 1d25eade5b87c4f008f526eddc79feb5, type: 2}
   _prefabs: {fileID: 11400000, guid: 29a72281d77364d6eaef45f41722e5df, type: 2}
   _loops: []
   _connectors: []
   _projectiles: []
+  _loopInventory: []
+  _connectorInventory: []
 --- !u!4 &100686927
 Transform:
   m_ObjectHideFlags: 0
@@ -430,7 +432,7 @@ Transform:
   m_GameObject: {fileID: 345257020}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18, y: -0.5, z: 0}
+  m_LocalPosition: {x: -18, y: 0.275, z: 0}
   m_LocalScale: {x: 1, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -785,7 +787,7 @@ Transform:
   m_GameObject: {fileID: 1956699765}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18, y: -0.5, z: 0}
+  m_LocalPosition: {x: 18, y: 0.275, z: 0}
   m_LocalScale: {x: 1, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

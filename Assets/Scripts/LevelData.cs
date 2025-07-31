@@ -13,6 +13,7 @@ namespace Gmtk2025
         [Serializable]
         public class LoopData
         {
+            public bool DoStartWith;
             public float Radius;
             public List<ConnectorData> Connectors;
         }
@@ -21,7 +22,11 @@ namespace Gmtk2025
         public class ConnectorData
         {
             public ConnectorType Type;
+            public int Value;
             public float LoopSpace;
+            public bool DoStartWith;
+
+            [Space(16)]
             public bool IsConnected;
             public LoopData AttachedLoop;
         }

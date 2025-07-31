@@ -7,6 +7,7 @@ namespace Gmtk2025
         public bool IsOnLoop => _currentLoop != null;
 
         // Positive = clockwise
+        [SerializeField]
         private float _speed;
         
         private PlacedLoop _currentLoop;
