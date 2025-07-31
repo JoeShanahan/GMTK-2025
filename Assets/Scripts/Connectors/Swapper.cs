@@ -4,14 +4,13 @@ namespace Gmtk2025.Connectors
 {
     public class Swapper : Connector
     {
-        [SerializeField] private PlacedLoop _firstLoop;
-
-        [SerializeField] private PlacedLoop _attachedLoop;
-
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-            // TODO swap from one loop to the other
-            transform.localScale *= 1.3f;
+            if (_attachedLoop == null || _firstLoop == null)
+                return;
+
+            PlacedLoop toLoop = currentLoop == _firstLoop ? _attachedLoop : _firstLoop;
+            projectile.SwapBetweenLoops(currentLoop, toLoop);
         }
     }
 }

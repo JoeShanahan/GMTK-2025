@@ -1,0 +1,33 @@
+using System;
+using UnityEngine;
+
+namespace Gmtk2025
+{
+    [CreateAssetMenu]
+    public class PrefabFactory : ScriptableObject
+    {
+        [SerializeField] private GameObject _loopPrefab;
+        [SerializeField] private GameObject _projectilePrefab;
+        [SerializeField] private GameObject _swapPrefab;
+        [SerializeField] private GameObject _launchPrefab;
+        [SerializeField] private GameObject _binaryPrefab;
+        [SerializeField] private GameObject _countdownPrefab;
+
+        public GameObject GetLoop() => _loopPrefab;
+        
+        public GameObject GetProjectile() => _projectilePrefab;
+
+        public GameObject GetConnector(ConnectorType type)
+        {
+            return type switch
+            {
+                ConnectorType.Unknown => null,
+                ConnectorType.Swap => _swapPrefab,
+                ConnectorType.Launch => _launchPrefab,
+                ConnectorType.Binary => _binaryPrefab,
+                ConnectorType.Countdown => _countdownPrefab,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+        }
+    }
+}
