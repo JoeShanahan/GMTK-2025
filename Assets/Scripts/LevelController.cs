@@ -28,10 +28,75 @@ namespace Gmtk2025
         private const float LOOP_DISTANCE = 0;
         private const float CONN_DISTANCE = -0.1f;
         private const float PROJ_DISTANCE = -0.2f;
+
+        private bool _isPlayingSolution;
         
         void Start()
         {
             SpawnLevel(_currentLevel);
+            
+            foreach (Projectile proj in _projectiles)
+            {
+                proj.Freeze();
+            }
+        }
+
+        public void StartPlayerSolution()
+        {
+            if (_isPlayingSolution)
+                return;
+            
+            foreach (Projectile proj in _projectiles)
+            {
+                proj.Unfreeze();
+            }
+
+            _isPlayingSolution = true;
+        }
+
+        private void ClearEverything()
+        {
+            foreach (Projectile proj in _projectiles)
+                Destroy(proj.gameObject);
+            
+            foreach (PlacedLoop loop in _loops)
+                Destroy(loop.gameObject);
+            
+            foreach (Connector conn in _connectors)
+                Destroy(conn.gameObject);
+            
+            _projectiles.Clear();
+            _loops.Clear();
+            _connectors.Clear();
+            _connectorInventory.Clear();
+            _loopInventory.Clear();
+        }
+
+        public void SoftReset()
+        {
+            ClearEverything();
+            
+            SpawnLevel(_currentLevel);
+            
+            foreach (Projectile proj in _projectiles)
+            {
+                proj.Freeze();
+            }
+
+            _isPlayingSolution = false;
+        }
+
+        public void HardReset()
+        {
+            ClearEverything();
+            SpawnLevel(_currentLevel);
+            
+            foreach (Projectile proj in _projectiles)
+            {
+                proj.Freeze();
+            }
+
+            _isPlayingSolution = false;
         }
 
         private void SpawnLevel(LevelData level)
@@ -44,6 +109,7 @@ namespace Gmtk2025
             }
             
             PlacedLoop startingLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
+            _loops.Add(startingLoop);
 
             Vector3 pos = new Vector3(level.StartingLoopPosition.x, level.StartingLoopPosition.y, LOOP_DISTANCE);
             startingLoop.InitFirstLoop(pos, level.StartingLoop.Radius);
@@ -114,6 +180,7 @@ namespace Gmtk2025
                 }
                 
                 PlacedLoop newLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
+                _loops.Add(newLoop);
                 newLoop.Init(loop, conn, connData.AttachedLoop.Radius);
                 SpawnConnections(newLoop, connData.AttachedLoop.Connectors);
                 loop.AddConnection(conn, connData.LoopSpace, newLoop);

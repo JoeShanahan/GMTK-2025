@@ -25,7 +25,7 @@ MonoBehaviour:
     - Type: 1
       Value: 0
       LoopSpace: 0.333333
-      DoStartWith: 0
+      DoStartWith: 1
       IsConnected: 1
       AttachedLoop:
         DoStartWith: 0
