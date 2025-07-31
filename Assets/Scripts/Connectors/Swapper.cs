@@ -4,16 +4,14 @@ namespace Gmtk2025.Connectors
 {
     public class Swapper : Connector
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        [SerializeField] private PlacedLoop _firstLoop;
+
+        [SerializeField] private PlacedLoop _attachedLoop;
+
+        public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            // TODO swap from one loop to the other
+            transform.localScale *= 1.3f;
         }
     }
 }

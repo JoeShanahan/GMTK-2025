@@ -4,16 +4,9 @@ namespace Gmtk2025.Connectors
 {
     public class Launcher : Connector
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            // TODO Launch!
         }
     }
 }

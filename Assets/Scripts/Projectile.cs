@@ -22,7 +22,8 @@ namespace Gmtk2025
 
         private void SwapToOnLoop(PlacedLoop loop)
         {
-            // TODO use the dot product of the current velocity and the tangent
+            // TODO use the dot product of the current velocity and the tangent to calculate speed
+            // TODO negative speed if going counter-clockwise
             _speed = 5;
             
             _rb.simulated = false;
@@ -60,24 +61,43 @@ namespace Gmtk2025
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (IsOnLoop == false)
                 return;
+            
+            // TODO increase speed by using Physics2D.gravity, direction of travel, and Time.deltaTime
+            
+            Move(1.0f);
 
+            
+        }
+
+        private void Move(float moveRemaining, int recursionDepth=0)
+        {
+            if (recursionDepth > 99)
+            {
+                Debug.LogError("Hit recursion of 99 oops!");
+                return;
+            }
+            
+            float speedPerFrame = _speed * Time.deltaTime * moveRemaining;
             float currentLoopSpace = _currentLoop.PositionToLoopSpace(transform.position);
-            float speedPerFrame = _speed * Time.deltaTime;
-
+            
             float newLoopSpace = ((currentLoopSpace + (speedPerFrame / _currentLoop.Circumference)) + 100) % 1;
             Vector3 newPos = _currentLoop.LoopSpaceToPosition(newLoopSpace);
             newPos.z = transform.position.z;
             transform.position = newPos;
 
-            bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainder, out Connector connector);
+            bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainingDistance, out Connector connector);
 
             if (didPassConnector)
             {
+                transform.position = connector.transform.position;
+                float remainingPercent = remainingDistance / speedPerFrame;
                 connector.OnProjectilePassed(this, _currentLoop);
+                
+                Move(remainingPercent, recursionDepth + 1);
             }
         }
     }

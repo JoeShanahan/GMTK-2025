@@ -81,11 +81,18 @@ namespace Gmtk2025
                 bool b = info.Offset + 1 >= min && info.Offset + 1 <= max;
                 bool c = info.Offset - 1 >= min && info.Offset - 1 <= max;
 
-                if (a || b || c)
+                for (int i = -1; i <= 1; i++)
                 {
-                    connector = info.Connector;
-                    // remainder = blah blah
-                    return true;
+                    float offset = info.Offset + i;
+
+                    if (offset > min && offset < max)
+                    {
+                        connector = info.Connector;
+                        float distanceToConnector = Mathf.Abs(offset - loopSpaceStart) * Circumference;
+                        remainder = absoluteDistance - distanceToConnector;
+                        return true;
+                    }
+                    
                 }
             }
             
