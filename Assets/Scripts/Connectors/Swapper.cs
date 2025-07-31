@@ -8,7 +8,7 @@ namespace Gmtk2025.Connectors
         {
             if (_attachedLoop == null || _firstLoop == null)
                 return;
-            
+
             PlacedLoop toLoop = currentLoop == _firstLoop ? _attachedLoop : _firstLoop;
             projectile.SwapBetweenLoops(currentLoop, toLoop);
         }
