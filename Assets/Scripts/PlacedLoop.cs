@@ -55,7 +55,8 @@ namespace Gmtk2025
         public Vector3 LoopSpaceToPosition(float loopSpace)
         {
             float angle = -loopSpace * TAU;
-            return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * _radius;
+            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * _radius;
+            return transform.position + offset;
         }
 
         // Checks to see if there is a connector between [loopSpaceStart] and [loopSpaceEnd]
