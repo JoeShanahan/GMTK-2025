@@ -16,6 +16,8 @@ namespace Gmtk2025
 
             public PlacedLoop OtherLoop;
         }
+
+        public float Radius => _radius;
         
         [SerializeField] private LineRenderer _line;
 

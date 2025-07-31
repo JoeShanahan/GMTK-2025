@@ -30,6 +30,7 @@ namespace Gmtk2025
         private const float PROJ_DISTANCE = -0.2f;
 
         private bool _isPlayingSolution;
+        private LevelData _tempLevel;
         
         void Start()
         {
@@ -41,10 +42,40 @@ namespace Gmtk2025
             }
         }
 
+        private LevelData ConvertScreenToLevelData()
+        {
+            var tempLevel = ScriptableObject.CreateInstance<LevelData>();
+            
+            tempLevel.Projectiles = new List<Vector2>();
+
+            foreach (Projectile proj in _projectiles)
+            {
+                tempLevel.Projectiles.Add(proj.transform.localPosition);
+            }
+            
+            if (_loops.Count == 0)
+                return tempLevel;
+            
+            PlacedLoop startingLoop = _loops[0];
+
+            tempLevel.StartingLoopPosition = startingLoop.transform.localPosition;
+
+            tempLevel.StartingLoop = new LevelData.LoopData()
+            {
+                DoStartWith = true,
+                Radius = startingLoop.Radius,
+                Connectors = new List<LevelData.ConnectorData>()
+            };
+
+            return tempLevel;
+        }
+
         public void StartPlayerSolution()
         {
             if (_isPlayingSolution)
                 return;
+            
+            _tempLevel = ConvertScreenToLevelData();
             
             foreach (Projectile proj in _projectiles)
             {
@@ -74,9 +105,15 @@ namespace Gmtk2025
 
         public void SoftReset()
         {
+            if (_isPlayingSolution == false)
+                return;
+
+            if (_tempLevel == null)
+                return;
+            
             ClearEverything();
             
-            SpawnLevel(_currentLevel);
+            SpawnLevel(_tempLevel);
             
             foreach (Projectile proj in _projectiles)
             {
