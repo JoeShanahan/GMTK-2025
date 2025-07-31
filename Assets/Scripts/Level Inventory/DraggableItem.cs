@@ -4,25 +4,28 @@ using UnityEngine.InputSystem;
 public class DraggableItem : MonoBehaviour {
     [SerializeField] private InputActionReference mouseClickAction;
     [SerializeField] private InputActionReference mousePositionAction;
+    [SerializeField] private GameObject[] inventoryAnchors;
 
     private Camera mainCamera;
     private bool isDragging;
     private Vector3 offset;
+    private Collider2D itemCollider;
 
     private void Start() {
         mainCamera = Camera.main;
+        itemCollider = GetComponent<Collider2D>();
     }
 
     private void OnEnable() {
-        mouseClickAction.action.started += OnMouseDown;
-        mouseClickAction.action.canceled += OnMouseUp;
+        mouseClickAction.action.started += BeginDrag;
+        mouseClickAction.action.canceled += EndDrag;
         mouseClickAction.action.Enable();
         mousePositionAction.action.Enable();
     }
 
     private void OnDisable() {
-        mouseClickAction.action.started -= OnMouseDown;
-        mouseClickAction.action.canceled -= OnMouseUp;
+        mouseClickAction.action.started -= BeginDrag;
+        mouseClickAction.action.canceled -= EndDrag;
         mouseClickAction.action.Disable();
         mousePositionAction.action.Disable();
     }
@@ -47,14 +50,30 @@ public class DraggableItem : MonoBehaviour {
         return new Vector3(clampedX, clampedY, position.z);
     }
 
-    private void OnMouseDown(InputAction.CallbackContext context) {
+    private void BeginDrag(InputAction.CallbackContext context) {
         Vector2 mouseScreenPosition = mousePositionAction.action.ReadValue<Vector2>();
         Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, mainCamera.WorldToScreenPoint(transform.position).z));
+        Vector2 worldPoint2D = new Vector2(worldPosition.x, worldPosition.y);
+
+        RaycastHit2D hit = Physics2D.Raycast(worldPoint2D, Vector2.zero);
+        if (hit.collider == null || hit.collider.gameObject != gameObject)
+            return;
+
+        transform.SetParent(null);
         offset = transform.position - worldPosition;
         isDragging = true;
     }
 
-    private void OnMouseUp(InputAction.CallbackContext context) {
+    private void EndDrag(InputAction.CallbackContext context) {
         isDragging = false;
+
+        foreach (GameObject anchor in inventoryAnchors) {
+            Collider2D anchorCollider = anchor.GetComponent<Collider2D>();
+            if (anchorCollider != null && itemCollider.bounds.Intersects(anchorCollider.bounds)) {
+                transform.SetParent(anchor.transform);
+                transform.position = anchor.transform.position;
+                return;
+            }
+        }
     }
 }
