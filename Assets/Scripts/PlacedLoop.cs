@@ -25,13 +25,46 @@ namespace Gmtk2025
 
         private CircleCollider2D _collider;
         
-        private const int POINT_COUNT = 32;
+        private const int POINT_COUNT = 48;
 
+        public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
+        {
+            _connectors.Add(new ConnectorInfo()
+            {
+                Connector = connector,
+                Offset = offset,
+                OtherLoop = otherLoop,
+            });
+        }
+        
+        public void InitFirstLoop(Vector3 position, float radius)
+        {
+            _radius = radius;
+            transform.localPosition = position;
+            SyncVisuals();
+        }
+
+        public void Init(PlacedLoop parentLoop, Connector connector, float radius)
+        {
+            Vector2 directionVector = connector.transform.position - parentLoop.transform.position;
+            directionVector.Normalize();
+
+            Vector3 pos = connector.transform.position;
+            pos.x += directionVector.x * radius;
+            pos.y += directionVector.y * radius;
+            pos.z = parentLoop.transform.position.z;
+            
+            transform.position = pos;
+            
+            _radius = radius;
+            SyncVisuals();
+        }
+        
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             _collider = GetComponent<CircleCollider2D>();
-            Sync();
+            SyncVisuals();
         }
 
         // Update is called once per frame
@@ -101,7 +134,7 @@ namespace Gmtk2025
         }
 
         [ContextMenu("Sync!")]
-        public void Sync()
+        public void SyncVisuals()
         {
             Vector3[] positions = new Vector3[POINT_COUNT + 1];
 
