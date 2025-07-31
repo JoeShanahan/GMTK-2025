@@ -18,6 +18,8 @@ namespace Gmtk2025
         }
 
         public float Radius => _radius;
+
+        public IEnumerable<ConnectorInfo> Connectors => _connectors;
         
         [SerializeField] private LineRenderer _line;
 

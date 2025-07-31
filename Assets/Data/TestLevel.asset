@@ -25,18 +25,27 @@ MonoBehaviour:
     - Type: 1
       Value: 0
       LoopSpace: 0.333333
-      DoStartWith: 0
+      DoStartWith: 1
       IsConnected: 1
       AttachedLoop:
-        DoStartWith: 0
+        DoStartWith: 1
         Radius: 3
         Connectors:
         - Type: 1
           Value: 0
           LoopSpace: 0.5
-          DoStartWith: 0
+          DoStartWith: 1
           IsConnected: 1
           AttachedLoop:
             DoStartWith: 1
             Radius: 2
+            Connectors: []
+        - Type: 1
+          Value: 0
+          LoopSpace: 0.25
+          DoStartWith: 1
+          IsConnected: 1
+          AttachedLoop:
+            DoStartWith: 1
+            Radius: 1
             Connectors: []

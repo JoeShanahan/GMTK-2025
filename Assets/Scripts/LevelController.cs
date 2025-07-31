@@ -45,6 +45,7 @@ namespace Gmtk2025
         private LevelData ConvertScreenToLevelData()
         {
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
+            var done = new List<PlacedLoop>();
             
             tempLevel.Projectiles = new List<Vector2>();
 
@@ -66,8 +67,47 @@ namespace Gmtk2025
                 Radius = startingLoop.Radius,
                 Connectors = new List<LevelData.ConnectorData>()
             };
-
+            
+            AddConnectionsToLevelData(startingLoop, tempLevel.StartingLoop.Connectors, done);
+            
             return tempLevel;
+        }
+
+        private void AddConnectionsToLevelData(PlacedLoop loop, List<LevelData.ConnectorData> destList, List<PlacedLoop> done)
+        {
+            if (done.Contains(loop))
+                return;
+            
+            done.Add(loop);
+            
+            foreach (PlacedLoop.ConnectorInfo placedConnector in loop.Connectors)
+            {
+                if (placedConnector.OtherLoop != null && done.Contains(placedConnector.OtherLoop))
+                    continue;
+                
+                var connData = new LevelData.ConnectorData()
+                {
+                    Type = placedConnector.Connector.Type,
+                    Value = placedConnector.Connector.IntValue,
+                    LoopSpace =  placedConnector.Offset,
+                    DoStartWith = true
+                };
+
+                if (placedConnector.OtherLoop != null)
+                {
+                    connData.IsConnected = true;
+                    connData.AttachedLoop = new LevelData.LoopData()
+                    {
+                        DoStartWith = true,
+                        Radius = placedConnector.OtherLoop.Radius,
+                        Connectors = new List<LevelData.ConnectorData>()
+                    };
+                    
+                    AddConnectionsToLevelData(placedConnector.OtherLoop, connData.AttachedLoop.Connectors, done);
+                }
+                
+                destList.Add(connData);
+            }
         }
 
         public void StartPlayerSolution()
