@@ -10,42 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efd16c5569d384e148bc9c4fac868cb6, type: 3}
-  m_Name: TestLevel
+  m_Name: TestLevel2
   m_EditorClassIdentifier: 
   Projectiles:
   - {x: 0, y: 8}
   - {x: 1, y: 8}
   - {x: 2, y: 8}
   - {x: 3, y: 8}
-  StartingLoopPosition: {x: 0, y: 2}
+  StartingLoopPosition: {x: 0, y: 0}
   StartingLoop:
     DoStartWith: 1
-    Radius: 4
+    Radius: 2
     Connectors:
     - Type: 1
       Value: 0
-      LoopSpace: 0.333333
+      LoopSpace: 0.25
       DoStartWith: 1
-      IsConnected: 1
+      IsConnected: 0
       AttachedLoop:
-        DoStartWith: 1
+        DoStartWith: 0
         Radius: 3
-        Connectors:
-        - Type: 1
-          Value: 0
-          LoopSpace: 0.5
-          DoStartWith: 1
-          IsConnected: 1
-          AttachedLoop:
-            DoStartWith: 0
-            Radius: 2
-            Connectors: []
-        - Type: 1
-          Value: 0
-          LoopSpace: 0.25
-          DoStartWith: 1
-          IsConnected: 0
-          AttachedLoop:
-            DoStartWith: 1
-            Radius: 1
-            Connectors: []
+        Connectors: []
+    - Type: 1
+      Value: 0
+      LoopSpace: 0.5
+      DoStartWith: 1
+      IsConnected: 0
+      AttachedLoop:
+        DoStartWith: 0
+        Radius: 3
+        Connectors: []
+    - Type: 1
+      Value: 0
+      LoopSpace: 0.75
+      DoStartWith: 1
+      IsConnected: 0
+      AttachedLoop:
+        DoStartWith: 0
+        Radius: 3
+        Connectors: []

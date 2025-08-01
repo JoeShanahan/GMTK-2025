@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 2236076803544398960}
   - component: {fileID: 1805609998523837915}
   m_Layer: 0
-  m_Name: Connector-Swap
+  m_Name: Connector-Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

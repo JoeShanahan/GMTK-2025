@@ -24,6 +24,9 @@ namespace Gmtk2025
         [Space(16)] 
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
+
+        public IEnumerable<Connector> AllConnectors => _connectors;
+        public IEnumerable<PlacedLoop> AllLoops => _loops;
         
         private const float LOOP_DISTANCE = 0;
         private const float CONN_DISTANCE = -0.1f;
@@ -39,6 +42,73 @@ namespace Gmtk2025
             foreach (Projectile proj in _projectiles)
             {
                 proj.Freeze();
+            }
+        }
+
+        public bool IsPlaying => _isPlayingSolution;
+
+        public void AddPlaceable(Placeable p)
+        {
+            if (p is PlacedLoop loop)
+            {
+                Connector closestConnector = null;
+                float smallestDistance = 1;
+                
+                foreach (Connector conn in _connectors)
+                {
+                    if (conn.LoopB != null)
+                        continue;
+
+                    // Something has gone wrong if this is the case
+                    if (conn.LoopA == null)
+                        continue;
+
+                    float distToConnector = Vector2.Distance(conn.transform.position, p.transform.position);
+                    float distFromRadius = Mathf.Abs(distToConnector - loop.Radius);
+
+                    if (distFromRadius < smallestDistance)
+                    {
+                        closestConnector = conn;
+                        smallestDistance = distFromRadius;
+                    }
+                }
+
+                if (closestConnector == null)
+                {
+                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE CONNECTOR!");
+                    Destroy(loop.gameObject);
+                    return;
+                }
+                
+                closestConnector.AttachLoop(loop);
+                _loops.Add(loop);
+            }
+            else if (p is Connector conn)
+            {
+                PlacedLoop closestLoop = null;
+                float smallestDistance = 0.1f;
+                
+                foreach (PlacedLoop pLoop in _loops)
+                {
+                    float distToConnector = Vector2.Distance(conn.transform.position, pLoop.transform.position);
+                    float distFromRadius = Mathf.Abs(distToConnector - pLoop.Radius);
+
+                    if (distFromRadius < smallestDistance)
+                    {
+                        closestLoop = pLoop;
+                        smallestDistance = distFromRadius;
+                    }
+                }
+
+                if (closestLoop == null)
+                {
+                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE LOOP!");
+                    Destroy(conn.gameObject);
+                    return;
+                }
+                
+                closestLoop.Connect(conn, null);
+                _connectors.Add(conn);
             }
         }
 

@@ -63,7 +63,7 @@ namespace Gmtk2025
         public void LeaveLoop()
         {
             _rb.simulated = true;
-            _rb.linearVelocity = Vector3.up * 10; // TODO actually calculate
+            _rb.linearVelocity = GetVelocity();
             
             _currentLoop = null;
         }
@@ -100,6 +100,14 @@ namespace Gmtk2025
             if (IsOnLoop == false)
                 return;
 
+            Move(1.0f);
+        }
+
+        private void FixedUpdate()
+        {
+            if (IsOnLoop == false)
+                return;
+
             Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
             
             if (_speed > 0)
@@ -112,10 +120,21 @@ namespace Gmtk2025
             float percentAlignedDown = Vector2.Dot(currentNormal, Vector2.down);
             float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign;
             _speed += speedChange;
+
+        }
+
+        private Vector3 GetVelocity()
+        {
+            Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
             
-            Debug.DrawLine(transform.position, transform.position + currentNormal, Color.red);
-            Debug.DrawLine(transform.position, transform.position + (Vector3.down * percentAlignedDown));
-            Move(1.0f);
+            if (_speed > 0)
+            {
+                currentNormal = -currentNormal;
+            }
+            
+            float sign = _speed > 0 ? 1 : - 1;
+
+            return currentNormal * _speed * sign;
         }
 
         private void Move(float moveRemaining, int recursionDepth = 0, Connector toSkip = null)
@@ -125,6 +144,9 @@ namespace Gmtk2025
                 Debug.LogError("Hit recursion of 99 oops!");
                 return;
             }
+
+            if (IsOnLoop == false)
+                return;
             
             float speedPerFrame = _speed * Time.deltaTime * moveRemaining;
             float currentLoopSpace = _currentLoop.PositionToLoopSpace(transform.position);
