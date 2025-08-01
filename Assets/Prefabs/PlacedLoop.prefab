@@ -81,9 +81,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   _ghostValidColor:
     serializedVersion: 2
-    key0: {r: 0.049396563, g: 0.745283, b: 0, a: 0.5882353}
-    key1: {r: 0.050980393, g: 0.7490196, b: 0, a: 0.5882353}
-    key2: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 0.06842089, g: 1, b: 0, a: 0.5882353}
+    key1: {r: 0.06806278, g: 1, b: 0, a: 0.78431374}
+    key2: {r: 0, g: 0, b: 0, a: 0.78431374}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -98,8 +98,8 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 65535
-    atime2: 0
+    atime1: 1157
+    atime2: 65535
     atime3: 0
     atime4: 0
     atime5: 0
@@ -108,7 +108,7 @@ MonoBehaviour:
     m_Mode: 0
     m_ColorSpace: -1
     m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
+    m_NumAlphaKeys: 3
   _normalColor:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 0.78431374}

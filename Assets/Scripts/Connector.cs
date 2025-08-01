@@ -17,6 +17,9 @@ namespace Gmtk2025
     {
         public virtual ConnectorType Type => ConnectorType.Unknown;
         public virtual int IntValue => 0;
+
+        public PlacedLoop LoopA => _firstLoop;
+        public PlacedLoop LoopB => _attachedLoop;
         
         [SerializeField] protected PlacedLoop _firstLoop;
 

@@ -24,6 +24,8 @@ namespace Gmtk2025
         [Space(16)] 
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
+
+        public IEnumerable<Connector> AllConnectors => _connectors;
         
         private const float LOOP_DISTANCE = 0;
         private const float CONN_DISTANCE = -0.1f;

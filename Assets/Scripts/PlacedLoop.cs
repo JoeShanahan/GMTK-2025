@@ -10,6 +10,11 @@ namespace Gmtk2025
         {
             
         }
+
+        public virtual void MoveTo(Vector3 worldPos)
+        {
+            transform.position = worldPos;
+        }
     }
     
     public class PlacedLoop : Placeable
@@ -39,15 +44,82 @@ namespace Gmtk2025
         [SerializeField] private Gradient _ghostValidColor;
         [SerializeField] private Gradient _normalColor;
         
+        public bool CanPlace { get; private set; }
+        
         private CircleCollider2D _collider;
+
+        private List<SnapPoint> _availableSnapPoints = new();
         
         private const int POINT_COUNT = 48;
 
+        public class SnapPoint
+        {
+            public Vector2 WorldPos;
+            public Connector Connector;
+        }
+
+        public override void MoveTo(Vector3 worldPos)
+        {
+            SnapPoint closestSnap = null;
+            float minDist = 1f;
+
+            foreach (SnapPoint snap in _availableSnapPoints)
+            {
+                float dist = Vector2.Distance(snap.WorldPos, worldPos);
+
+                if (dist < minDist)
+                {
+                    closestSnap = snap;
+                    minDist = dist;
+                }
+            }
+
+            if (closestSnap != null)
+            {
+                transform.position = closestSnap.WorldPos;
+                _line.colorGradient = _ghostValidColor;
+                CanPlace = true;
+            }
+            else
+            {
+                transform.position = worldPos;
+                _line.colorGradient = _ghostInvalidColor;
+                CanPlace = false;
+            }
+        }
+        
+        private void DetectAllSnapPoints()
+        {
+            _availableSnapPoints.Clear();
+            var level = FindFirstObjectByType<LevelController>();
+
+            foreach (Connector conn in level.AllConnectors)
+            {
+                if (conn.LoopB != null)
+                    continue;
+
+                // Something has gone wrong if this is the case
+                if (conn.LoopA == null)
+                    continue;
+
+                Vector3 dirToConnector = conn.transform.position - conn.LoopA.transform.position;
+                dirToConnector.z = 0;
+                dirToConnector.Normalize();
+                
+                _availableSnapPoints.Add(new SnapPoint()
+                {
+                    WorldPos = conn.transform.position + (dirToConnector * _radius),
+                    Connector =  conn
+                });
+            }
+        }
+        
         public override void SetAsGhost(float value)
         {
             _line.colorGradient = _ghostInvalidColor;
             _radius = value;
             SyncVisuals();
+            DetectAllSnapPoints();
         }
 
         public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
@@ -104,7 +176,7 @@ namespace Gmtk2025
         // Update is called once per frame
         void Update()
         {
-
+            
         }
 
         private const float TAU = Mathf.PI * 2;
