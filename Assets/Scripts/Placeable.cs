@@ -7,6 +7,11 @@ namespace Gmtk2025
         public bool CanPlace { get; protected set; }
         
         public LevelDataFlags Flags { get; protected set; }
+
+        public void SetAsPlayerPlaced()
+        {
+            Flags |= LevelDataFlags.WasPlacedByPlayer;
+        }
         
         public virtual void SetAsGhost(float value)
         {

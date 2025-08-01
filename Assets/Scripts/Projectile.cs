@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Gmtk2025
 {
-    public class Projectile : MonoBehaviour
+    public class Projectile : Placeable
     {
         public bool IsOnLoop => _currentLoop != null;
 
@@ -10,9 +10,57 @@ namespace Gmtk2025
         [SerializeField]
         private float _speed;
         
+        [SerializeField] private SpriteRenderer _ghostSprite;
+        [SerializeField] private Transform _realVisuals;
+        
+        [SerializeField] private Color _invalidColor = new Color(1,0, 0, 0.7f);
+        [SerializeField] private Color _validColor = new Color(0,1, 0, 0.9f);
+
+        
         private PlacedLoop _currentLoop;
         private Rigidbody2D _rb;
         private CircleCollider2D _collider;
+
+        private bool _isGhost;
+        
+        public override void SetAsGhost(float value)
+        {
+            _ghostSprite.gameObject.SetActive(true);
+            _realVisuals.gameObject.SetActive(false);
+            _rb ??= GetComponent<Rigidbody2D>();
+            _rb.simulated = false;
+            _isGhost = true;
+        }
+        
+        public override void StopBeingAGhost()
+        {
+            _ghostSprite.gameObject.SetActive(false);
+            _realVisuals.gameObject.SetActive(true);
+            _rb.simulated = false;
+            _isGhost = false;
+        }
+
+        public override void MoveTo(Vector3 worldPos)
+        {
+            bool canPlace = true; // TODO check if actually can place
+            
+            worldPos.x = Mathf.RoundToInt(worldPos.x * 4) / 4f;
+            worldPos.y = Mathf.RoundToInt(worldPos.y * 4) / 4f;
+            
+            if (canPlace)
+            {
+                _ghostSprite.color = _validColor;
+                CanPlace = true;
+            }
+            else
+            {
+                transform.position = worldPos;
+                _ghostSprite.color = _invalidColor;
+                CanPlace = false;
+            }
+            
+            transform.position = worldPos;
+        }
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -69,14 +117,11 @@ namespace Gmtk2025
             _currentLoop = null;
         }
 
-        private void SwapToFree()
-        {
-            _rb.simulated = true;
-            _currentLoop = null;
-        }
-        
         private void OnTriggerStay2D(Collider2D other)
         {
+            if (_isGhost)
+                return;
+            
             if (IsOnLoop)
                 return;
             
@@ -98,6 +143,9 @@ namespace Gmtk2025
 
         private void Update()
         {
+            if (_isGhost)
+                return;
+            
             if (IsOnLoop == false)
                 return;
 

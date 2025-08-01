@@ -84,6 +84,18 @@ namespace Gmtk2025
             float clampedY = Mathf.Clamp(position.y, min.y, max.y);
             return new Vector3(clampedX, clampedY, position.z);
         }
+
+        public void StartPlacingProjectile()
+        {
+            if (_currentGhost != null)
+                Destroy(_currentGhost.gameObject);
+            
+            GameObject newObj = Instantiate(_prefabs.GetProjectile());
+            Projectile newProjectile = newObj.GetComponent<Projectile>();
+            newProjectile.SetAsPlayerPlaced();
+            newProjectile.SetAsGhost(0);
+            _currentGhost = newProjectile;
+        }
         
         public void StartPlacingLoop(float radius)
         {
@@ -92,6 +104,8 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetLoop());
             PlacedLoop newLoop = newObj.GetComponent<PlacedLoop>();
+            newLoop.SetAsPlayerPlaced();
+
             newLoop.SetAsGhost(radius);
             _currentGhost = newLoop;
         }
@@ -103,6 +117,8 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetConnector(type));
             Connector newConn = newObj.GetComponent<Connector>();
+            newConn.SetAsPlayerPlaced();
+
             newConn.SetAsGhost(value);
             _currentGhost = newConn;
         }

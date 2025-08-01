@@ -5,7 +5,7 @@ namespace Gmtk2025
 {
     public class InventoryPickerButton : MonoBehaviour
     {
-        private enum PickType { Loop, Connector };
+        private enum PickType { Loop, Connector, Projectile };
 
         [SerializeField] private RectTransform _moverRect;
         [SerializeField] private LevelCreator _levelCreator;
@@ -36,6 +36,10 @@ namespace Gmtk2025
             else if (_buttonType == PickType.Connector)
             {
                 _levelCreator.StartPlacingConnector(_connectorType, _connectorValue);
+            }
+            else if (_buttonType == PickType.Projectile)
+            {
+                _levelCreator.StartPlacingProjectile();
             }
             
             _parentBar.OnSelectButton(this);

@@ -49,64 +49,17 @@ namespace Gmtk2025
 
         public void AddPlaceable(Placeable p)
         {
-            if (p is PlacedLoop loop)
+            if (p is Projectile proj)
             {
-                Connector closestConnector = null;
-                float smallestDistance = 1;
-                
-                foreach (Connector conn in _connectors)
-                {
-                    if (conn.LoopB != null)
-                        continue;
-
-                    // Something has gone wrong if this is the case
-                    if (conn.LoopA == null)
-                        continue;
-
-                    float distToConnector = Vector2.Distance(conn.transform.position, p.transform.position);
-                    float distFromRadius = Mathf.Abs(distToConnector - loop.Radius);
-
-                    if (distFromRadius < smallestDistance)
-                    {
-                        closestConnector = conn;
-                        smallestDistance = distFromRadius;
-                    }
-                }
-
-                if (closestConnector == null)
-                {
-                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE CONNECTOR!");
-                    Destroy(loop.gameObject);
-                    return;
-                }
-                
+                _projectiles.Add(proj);
+            }
+            else if (p is PlacedLoop loop)
+            {
                 _loops.Add(loop);
                 RefreshAllConnections();
             }
             else if (p is Connector conn)
             {
-                PlacedLoop closestLoop = null;
-                float smallestDistance = 0.1f;
-                
-                foreach (PlacedLoop pLoop in _loops)
-                {
-                    float distToConnector = Vector2.Distance(conn.transform.position, pLoop.transform.position);
-                    float distFromRadius = Mathf.Abs(distToConnector - pLoop.Radius);
-
-                    if (distFromRadius < smallestDistance)
-                    {
-                        closestLoop = pLoop;
-                        smallestDistance = distFromRadius;
-                    }
-                }
-
-                if (closestLoop == null)
-                {
-                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE LOOP!");
-                    Destroy(conn.gameObject);
-                    return;
-                }
-                
                 _connectors.Add(conn);
                 RefreshAllConnections();
             }
