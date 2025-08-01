@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 
 namespace Gmtk2025
@@ -29,6 +30,13 @@ namespace Gmtk2025
         {
             _firstLoop = parent;
             _attachedLoop = child;
+        }
+
+        public void AttachLoop(PlacedLoop loop)
+        {
+            _attachedLoop = loop;
+            _firstLoop.Connect(this, loop);
+            loop.Connect(this, _firstLoop);
         }
         
         public virtual void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)

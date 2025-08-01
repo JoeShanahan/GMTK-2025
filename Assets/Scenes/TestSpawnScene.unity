@@ -528,7 +528,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabs: {fileID: 11400000, guid: 29a72281d77364d6eaef45f41722e5df, type: 2}
   _currentGhost: {fileID: 0}
+  _levelController: {fileID: 100686926}
+  _inventoryBar: {fileID: 2113689708}
   _mousePositionAction: {fileID: 9042393689914500519, guid: 8136e79a2bf8736439a3e61d0f71ea71, type: 3}
+  _mousePressAction: {fileID: 4120889564580065616, guid: 8136e79a2bf8736439a3e61d0f71ea71, type: 3}
 --- !u!1 &241878184
 GameObject:
   m_ObjectHideFlags: 0

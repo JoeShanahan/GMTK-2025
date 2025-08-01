@@ -10,20 +10,44 @@ namespace Gmtk2025
         
         [SerializeField]
         private Placeable _currentGhost;
+
+        [SerializeField] 
+        private LevelController _levelController;
+
+        [SerializeField] 
+        private InventoryBar _inventoryBar;
         
         [SerializeField] 
         private InputActionReference _mousePositionAction;
+        
+        [SerializeField] 
+        private InputActionReference _mousePressAction;
 
         private Camera _mainCamera;
         
         private void OnEnable() 
         {
             _mousePositionAction.action.Enable();
+            _mousePressAction.action.Enable();
+            _mousePressAction.action.performed += OnMousePress;
+        }
+        
+        private void OnMousePress(InputAction.CallbackContext context) 
+        {
+            if (_currentGhost != null && _currentGhost.CanPlace)
+            {
+                _currentGhost.StopBeingAGhost();
+                _levelController.AddPlaceable(_currentGhost);
+                _currentGhost = null;
+                _inventoryBar.OnSelectButton(null);
+            }
         }
         
         private void OnDisable() 
         {
             _mousePositionAction.action.Disable();
+            _mousePressAction.action.Disable();
+            _mousePressAction.action.performed += OnMousePress;
         }
 
         private void Start()

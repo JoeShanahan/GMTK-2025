@@ -6,7 +6,15 @@ namespace Gmtk2025
 {
     public abstract class Placeable : MonoBehaviour
     {
+        public bool CanPlace { get; protected set; }
+
+        
         public virtual void SetAsGhost(float value)
+        {
+            
+        }
+        
+        public virtual void StopBeingAGhost()
         {
             
         }
@@ -44,8 +52,6 @@ namespace Gmtk2025
         [SerializeField] private Gradient _ghostValidColor;
         [SerializeField] private Gradient _normalColor;
         
-        public bool CanPlace { get; private set; }
-        
         private CircleCollider2D _collider;
 
         private List<SnapPoint> _availableSnapPoints = new();
@@ -56,6 +62,21 @@ namespace Gmtk2025
         {
             public Vector2 WorldPos;
             public Connector Connector;
+        }
+
+        public void Connect(Connector conn, PlacedLoop otherLoop)
+        {
+            foreach (ConnectorInfo myConn in _connectors)
+            {
+                if (myConn.Connector == conn)
+                {
+                    myConn.OtherLoop = otherLoop;
+                    return;
+                }
+            }
+
+            float offset = PositionToLoopSpace(conn.transform.position);
+            AddConnection(conn, offset, otherLoop);
         }
 
         public override void MoveTo(Vector3 worldPos)
@@ -76,6 +97,7 @@ namespace Gmtk2025
 
             if (closestSnap != null)
             {
+                // TODO check if in range of the level
                 transform.position = closestSnap.WorldPos;
                 _line.colorGradient = _ghostValidColor;
                 CanPlace = true;
@@ -120,6 +142,11 @@ namespace Gmtk2025
             _radius = value;
             SyncVisuals();
             DetectAllSnapPoints();
+        }
+        
+        public override void StopBeingAGhost()
+        {
+            _line.colorGradient = _normalColor;
         }
 
         public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)

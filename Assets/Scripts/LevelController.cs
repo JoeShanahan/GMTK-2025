@@ -44,6 +44,48 @@ namespace Gmtk2025
             }
         }
 
+        public void AddPlaceable(Placeable p)
+        {
+            if (p is PlacedLoop loop)
+            {
+                Connector closestConnector = null;
+                float smallestDistance = 1;
+                
+                foreach (Connector conn in _connectors)
+                {
+                    if (conn.LoopB != null)
+                        continue;
+
+                    // Something has gone wrong if this is the case
+                    if (conn.LoopA == null)
+                        continue;
+
+                    float distToConnector = Vector2.Distance(conn.transform.position, p.transform.position);
+                    float distFromRadius = Mathf.Abs(distToConnector - loop.Radius);
+
+                    if (distFromRadius < smallestDistance)
+                    {
+                        closestConnector = conn;
+                        smallestDistance = distFromRadius;
+                    }
+                }
+
+                if (closestConnector == null)
+                {
+                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE CONNECTOR!");
+                    Destroy(loop.gameObject);
+                    return;
+                }
+                
+                closestConnector.AttachLoop(loop);
+                _loops.Add(loop);
+            }
+            else if (p is Connector conn)
+            {
+                
+            }
+        }
+
         private LevelData ConvertScreenToLevelData()
         {
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
