@@ -83,8 +83,6 @@ namespace Gmtk2025
 
         private void SwapToOnLoop(PlacedLoop loop)
         {
-            _speed = 8;
-
             Vector3 previousVelocity = _rb.linearVelocity;
             
             _rb.simulated = false;
@@ -99,6 +97,19 @@ namespace Gmtk2025
             Vector3 previousDirection = previousVelocity.magnitude > 0 ? previousVelocity.normalized : Vector3.down;
 
             float alignment = Vector3.Dot(loopTangent, previousDirection);
+            _speed = -alignment * previousVelocity.magnitude;
+        }
+
+        public void WarpTo(Vector3 position, PlacedLoop otherLoop)
+        {
+            Vector3 previousVelocity = GetVelocity();
+            
+            _currentLoop = otherLoop;
+            transform.position = position;
+
+            Vector3 newTangent = _currentLoop.GetTangent(position);
+            Vector3 previousDirection = previousVelocity.magnitude > 0 ? previousVelocity.normalized : Vector3.down;
+            float alignment = Vector3.Dot(newTangent, previousDirection);
             _speed = -alignment * previousVelocity.magnitude;
         }
         
@@ -162,6 +173,8 @@ namespace Gmtk2025
             if (IsOnLoop == false)
                 return;
 
+            _speed = Mathf.Clamp(_speed, -50, 50);
+            
             Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
             
             if (_speed > 0)
