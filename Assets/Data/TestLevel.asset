@@ -12,11 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efd16c5569d384e148bc9c4fac868cb6, type: 3}
   m_Name: TestLevel
   m_EditorClassIdentifier: 
-  Projectiles:
-  - {x: 0, y: 8}
-  - {x: 1, y: 8}
-  - {x: 2, y: 8}
-  - {x: 3, y: 8}
+  Projectiles: []
   Loops:
   - Flags: 1
     Radius: 2

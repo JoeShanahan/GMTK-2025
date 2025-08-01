@@ -40,6 +40,7 @@ namespace Gmtk2025
         
         void Start()
         {
+            Application.targetFrameRate = 60;
             SpawnLevel(_currentLevel);
             
             foreach (Projectile proj in _projectiles)
@@ -178,7 +179,6 @@ namespace Gmtk2025
             }
 
             _isPlayingSolution = false;
-            _undoHistory.Clear();
         }
 
         public void HardReset()

@@ -84,9 +84,9 @@ namespace Gmtk2025
 
         private void SwapToOnLoop(PlacedLoop loop)
         {
-            // TODO use the dot product of the current velocity and the tangent to calculate speed
-            // TODO negative speed if going counter-clockwise
             _speed = 8;
+
+            Vector3 previousVelocity = _rb.linearVelocity;
             
             _rb.simulated = false;
             _currentLoop = loop;
@@ -95,6 +95,12 @@ namespace Gmtk2025
             Vector3 newPos = loop.LoopSpaceToPosition(loopSpace);
             newPos.z = transform.position.z;
             transform.position = newPos;
+
+            Vector3 loopTangent = _currentLoop.GetTangent(newPos);
+            Vector3 previousDirection = previousVelocity.magnitude > 0 ? previousVelocity.normalized : Vector3.down;
+
+            float alignment = Vector3.Dot(loopTangent, previousDirection);
+            _speed = -alignment * previousVelocity.magnitude;
         }
         
         public void SwapBetweenLoops(PlacedLoop fromLoop, PlacedLoop toLoop)

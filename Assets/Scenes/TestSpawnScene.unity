@@ -914,7 +914,7 @@ MonoBehaviour:
   _parentBar: {fileID: 2113689708}
   _buttonType: 1
   _loopRadius: 0
-  _connectorType: 2
+  _connectorType: 3
   _connectorValue: 0
 --- !u!114 &301161302
 MonoBehaviour:
