@@ -7,6 +7,7 @@ namespace Gmtk2025
         public bool IsOnLoop => _currentLoop != null;
 
         // Positive = clockwise
+        [SerializeField]
         private float _speed;
         
         private PlacedLoop _currentLoop;
@@ -20,11 +21,23 @@ namespace Gmtk2025
             _collider = GetComponent<CircleCollider2D>();
         }
 
+        public void Freeze()
+        {
+            _rb ??= GetComponent<Rigidbody2D>();
+            _rb.simulated = false;
+        }
+
+        public void Unfreeze()
+        {
+            _rb ??= GetComponent<Rigidbody2D>();
+            _rb.simulated = true;
+        }
+
         private void SwapToOnLoop(PlacedLoop loop)
         {
             // TODO use the dot product of the current velocity and the tangent to calculate speed
             // TODO negative speed if going counter-clockwise
-            _speed = 5;
+            _speed = 8;
             
             _rb.simulated = false;
             _currentLoop = loop;
@@ -34,10 +47,31 @@ namespace Gmtk2025
             newPos.z = transform.position.z;
             transform.position = newPos;
         }
+        
+        public void SwapBetweenLoops(PlacedLoop fromLoop, PlacedLoop toLoop)
+        {
+            _speed *= -1;
+            
+            _currentLoop = toLoop;
+
+            float loopSpace = toLoop.PositionToLoopSpace(transform.position);
+            Vector3 newPos = toLoop.LoopSpaceToPosition(loopSpace);
+            newPos.z = transform.position.z;
+            transform.position = newPos;
+        }
+
+        public void LeaveLoop()
+        {
+            _rb.simulated = true;
+            _rb.linearVelocity = Vector3.up * 10; // TODO actually calculate
+            
+            _currentLoop = null;
+        }
 
         private void SwapToFree()
         {
             _rb.simulated = true;
+            _currentLoop = null;
         }
         
         private void OnTriggerStay2D(Collider2D other)
@@ -65,15 +99,26 @@ namespace Gmtk2025
         {
             if (IsOnLoop == false)
                 return;
-            
-            // TODO increase speed by using Physics2D.gravity, direction of travel, and Time.deltaTime
-            
-            Move(1.0f);
 
+            Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
             
+            if (_speed > 0)
+            {
+                currentNormal = -currentNormal;
+            }
+
+            float sign = _speed > 0 ? 1 : - 1;
+
+            float percentAlignedDown = Vector2.Dot(currentNormal, Vector2.down);
+            float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign;
+            _speed += speedChange;
+            
+            Debug.DrawLine(transform.position, transform.position + currentNormal, Color.red);
+            Debug.DrawLine(transform.position, transform.position + (Vector3.down * percentAlignedDown));
+            Move(1.0f);
         }
 
-        private void Move(float moveRemaining, int recursionDepth=0)
+        private void Move(float moveRemaining, int recursionDepth = 0, Connector toSkip = null)
         {
             if (recursionDepth > 99)
             {
@@ -91,13 +136,13 @@ namespace Gmtk2025
 
             bool didPassConnector = _currentLoop.WillPassConnector(currentLoopSpace, speedPerFrame, out float remainingDistance, out Connector connector);
 
-            if (didPassConnector)
+            if (didPassConnector && connector != toSkip) // we don't want to do the same connector twice in a row
             {
                 transform.position = connector.transform.position;
                 float remainingPercent = remainingDistance / speedPerFrame;
                 connector.OnProjectilePassed(this, _currentLoop);
                 
-                Move(remainingPercent, recursionDepth + 1);
+                Move(remainingPercent, recursionDepth + 1, connector);
             }
         }
     }
