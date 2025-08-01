@@ -67,7 +67,6 @@ namespace Gmtk2025
         {
             _rb = GetComponent<Rigidbody2D>();
             _collider = GetComponent<CircleCollider2D>();
-            transform.position += new Vector3(0.001f, 0, 0);
         }
 
         public void Freeze()
@@ -136,7 +135,7 @@ namespace Gmtk2025
                 // We need the center of our object to pass the edge of this collider
                 float distance = Vector2.Distance(transform.position, other.transform.position);
 
-                if (distance <= otherCircle.radius)
+                if (distance <= otherCircle.radius + 0.01f)
                 {
                     if (other.TryGetComponent<PlacedLoop>(out var loop))
                     {
