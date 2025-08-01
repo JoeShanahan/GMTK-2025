@@ -99,12 +99,23 @@ namespace Gmtk2025
         {
             if (IsOnLoop == false)
                 return;
-            
-            // TODO increase speed by using Physics2D.gravity, direction of travel, and Time.deltaTime
-            
-            Move(1.0f);
 
+            Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
             
+            if (_speed > 0)
+            {
+                currentNormal = -currentNormal;
+            }
+
+            float sign = _speed > 0 ? 1 : - 1;
+
+            float percentAlignedDown = Vector2.Dot(currentNormal, Vector2.down);
+            float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign;
+            _speed += speedChange;
+            
+            Debug.DrawLine(transform.position, transform.position + currentNormal, Color.red);
+            Debug.DrawLine(transform.position, transform.position + (Vector3.down * percentAlignedDown));
+            Move(1.0f);
         }
 
         private void Move(float moveRemaining, int recursionDepth = 0, Connector toSkip = null)
