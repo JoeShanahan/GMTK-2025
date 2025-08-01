@@ -7,11 +7,16 @@ namespace Gmtk2025.Connectors
         [SerializeField] private SpriteRenderer _sprite;
         [SerializeField] private Color _goColor;
         [SerializeField] private Color _stopColor;
-        [SerializeField] private bool _canGo = true;
-
+        [SerializeField] private bool _startsOn = true;
+        private bool _canGo = true;
+        
+        public override ConnectorType Type => ConnectorType.Binary;
+        public override int IntValue => _startsOn ? 1 : 0;
+        
         public override void SetParameter(int number)
         {
             _canGo = number > 0;
+            _startsOn = number > 0;
         }
         
         private void Start()

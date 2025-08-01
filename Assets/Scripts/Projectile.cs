@@ -21,6 +21,18 @@ namespace Gmtk2025
             _collider = GetComponent<CircleCollider2D>();
         }
 
+        public void Freeze()
+        {
+            _rb ??= GetComponent<Rigidbody2D>();
+            _rb.simulated = false;
+        }
+
+        public void Unfreeze()
+        {
+            _rb ??= GetComponent<Rigidbody2D>();
+            _rb.simulated = true;
+        }
+
         private void SwapToOnLoop(PlacedLoop loop)
         {
             // TODO use the dot product of the current velocity and the tangent to calculate speed
