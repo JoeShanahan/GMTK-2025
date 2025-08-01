@@ -17,35 +17,15 @@ MonoBehaviour:
   - {x: 1, y: 8}
   - {x: 2, y: 8}
   - {x: 3, y: 8}
-  StartingLoopPosition: {x: 0, y: 2}
-  StartingLoop:
-    DoStartWith: 1
-    Radius: 4
-    Connectors:
-    - Type: 1
-      Value: 0
-      LoopSpace: 0.333333
-      DoStartWith: 1
-      IsConnected: 1
-      AttachedLoop:
-        DoStartWith: 1
-        Radius: 3
-        Connectors:
-        - Type: 1
-          Value: 0
-          LoopSpace: 0.5
-          DoStartWith: 1
-          IsConnected: 1
-          AttachedLoop:
-            DoStartWith: 0
-            Radius: 2
-            Connectors: []
-        - Type: 1
-          Value: 0
-          LoopSpace: 0.25
-          DoStartWith: 1
-          IsConnected: 0
-          AttachedLoop:
-            DoStartWith: 1
-            Radius: 1
-            Connectors: []
+  Loops:
+  - Flags: 1
+    Radius: 2
+    Pos: {x: 0, y: 0}
+  - Flags: 1
+    Radius: 2
+    Pos: {x: 4, y: 0}
+  Connectors:
+  - Type: 1
+    Flags: 1
+    Value: 0
+    Pos: {x: 2, y: 0}

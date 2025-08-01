@@ -19,6 +19,7 @@ namespace Gmtk2025
         {
             _rb = GetComponent<Rigidbody2D>();
             _collider = GetComponent<CircleCollider2D>();
+            transform.position += new Vector3(0.001f, 0, 0);
         }
 
         public void Freeze()

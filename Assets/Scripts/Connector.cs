@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Gmtk2025
 {
@@ -21,15 +22,15 @@ namespace Gmtk2025
         public virtual ConnectorType Type => ConnectorType.Unknown;
         public virtual int IntValue => 0;
 
-        public PlacedLoop LoopA => _firstLoop;
-        public PlacedLoop LoopB => _attachedLoop;
+        public PlacedLoop LoopA => _loopA;
+        public PlacedLoop LoopB => _loopB;
 
         [SerializeField] private SpriteRenderer _ghostSprite;
         [SerializeField] private Transform _realVisuals;
         
-        [SerializeField] protected PlacedLoop _firstLoop;
+        [SerializeField] protected PlacedLoop _loopA;
 
-        [SerializeField] protected PlacedLoop _attachedLoop;
+        [SerializeField] protected PlacedLoop _loopB;
 
         [SerializeField] private Color _invalidColor = new Color(1,0, 0, 0.7f);
         [SerializeField] private Color _validColor = new Color(0,1, 0, 0.9f);
@@ -41,18 +42,44 @@ namespace Gmtk2025
             public Vector2 WorldPos;
             public PlacedLoop Loop;
         }
+
+        public void DetectConnections()
+        {
+            var level = FindFirstObjectByType<LevelController>();
+
+            List<PlacedLoop> touchingLoops = new();
+            
+            foreach (PlacedLoop loop in level.AllLoops)
+            {
+                float dist = Vector2.Distance(loop.transform.position, transform.position);
+                float distFromRadius = Mathf.Abs(loop.Radius - dist);
+                
+                if (distFromRadius < 0.0001f)
+                {
+                    touchingLoops.Add(loop);
+                }
+            }
+
+            if (touchingLoops.Count == 1)
+            {
+                _loopA = touchingLoops[0];
+                _loopB = null;
+            }
+            else if (touchingLoops.Count == 2)
+            {
+                _loopA = touchingLoops[0];
+                _loopB = touchingLoops[1];
+            }
+            else if (touchingLoops.Count > 2)
+            {
+                Debug.LogError($"There's a connector that's touching {touchingLoops.Count} loops! Oh no!");
+            }
+        }
         
         public void SetLoops(PlacedLoop parent, PlacedLoop child)
         {
-            _firstLoop = parent;
-            _attachedLoop = child;
-        }
-
-        public void AttachLoop(PlacedLoop loop)
-        {
-            _attachedLoop = loop;
-            _firstLoop.Connect(this, loop);
-            loop.Connect(this, _firstLoop);
+            _loopA = parent;
+            _loopB = child;
         }
         
         public override void SetAsGhost(float value)
@@ -117,9 +144,6 @@ namespace Gmtk2025
             if (radius < 4) return 16;
             return 24;
         }
-        
-        
-        
         
         private void DetectAllSnapPoints()
         {

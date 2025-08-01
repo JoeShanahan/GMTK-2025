@@ -80,8 +80,8 @@ namespace Gmtk2025
                     return;
                 }
                 
-                closestConnector.AttachLoop(loop);
                 _loops.Add(loop);
+                RefreshAllConnections();
             }
             else if (p is Connector conn)
             {
@@ -107,8 +107,8 @@ namespace Gmtk2025
                     return;
                 }
                 
-                closestLoop.Connect(conn, null);
                 _connectors.Add(conn);
+                RefreshAllConnections();
             }
         }
 
@@ -123,61 +123,29 @@ namespace Gmtk2025
             {
                 tempLevel.Projectiles.Add(proj.transform.localPosition);
             }
-            
-            if (_loops.Count == 0)
-                return tempLevel;
-            
-            PlacedLoop startingLoop = _loops[0];
 
-            tempLevel.StartingLoopPosition = startingLoop.transform.localPosition;
-
-            tempLevel.StartingLoop = new LevelData.LoopData()
+            foreach (PlacedLoop loop in _loops)
             {
-                DoStartWith = true,
-                Radius = startingLoop.Radius,
-                Connectors = new List<LevelData.ConnectorData>()
-            };
+                tempLevel.Loops.Add(new LevelData.LoopData()
+                {
+                    Flags = loop.Flags,
+                    Pos = loop.transform.localPosition,
+                    Radius = loop.Radius
+                });
+            }
             
-            AddConnectionsToLevelData(startingLoop, tempLevel.StartingLoop.Connectors, done);
+            foreach (Connector conn in _connectors)
+            {
+                tempLevel.Connectors.Add(new LevelData.ConnectorData()
+                {
+                    Flags = conn.Flags,
+                    Pos = conn.transform.localPosition,
+                    Value = conn.IntValue,
+                    Type = conn.Type
+                });
+            }
             
             return tempLevel;
-        }
-
-        private void AddConnectionsToLevelData(PlacedLoop loop, List<LevelData.ConnectorData> destList, List<PlacedLoop> done)
-        {
-            if (done.Contains(loop))
-                return;
-            
-            done.Add(loop);
-            
-            foreach (PlacedLoop.ConnectorInfo placedConnector in loop.Connectors)
-            {
-                if (placedConnector.OtherLoop != null && done.Contains(placedConnector.OtherLoop))
-                    continue;
-                
-                var connData = new LevelData.ConnectorData()
-                {
-                    Type = placedConnector.Connector.Type,
-                    Value = placedConnector.Connector.IntValue,
-                    LoopSpace =  placedConnector.Offset,
-                    DoStartWith = true
-                };
-
-                if (placedConnector.OtherLoop != null)
-                {
-                    connData.IsConnected = true;
-                    connData.AttachedLoop = new LevelData.LoopData()
-                    {
-                        DoStartWith = true,
-                        Radius = placedConnector.OtherLoop.Radius,
-                        Connectors = new List<LevelData.ConnectorData>()
-                    };
-                    
-                    AddConnectionsToLevelData(placedConnector.OtherLoop, connData.AttachedLoop.Connectors, done);
-                }
-                
-                destList.Add(connData);
-            }
         }
 
         public void StartPlayerSolution()
@@ -255,85 +223,32 @@ namespace Gmtk2025
                 _projectiles.Add(newProjectile);
             }
             
-            PlacedLoop startingLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
-            _loops.Add(startingLoop);
-
-            Vector3 pos = new Vector3(level.StartingLoopPosition.x, level.StartingLoopPosition.y, LOOP_DISTANCE);
-            startingLoop.InitFirstLoop(pos, level.StartingLoop.Radius);
-            
-            SpawnConnections(startingLoop, level.StartingLoop.Connectors);
-        }
-
-        private void AddToInventory(LevelData.ConnectorData connData)
-        {
-            _connectorInventory.Add(new ConnectorItem()
+            foreach (var loopData in level.Loops)
             {
-                Type = connData.Type,
-                Value = connData.Value
-            });
-
-            if (connData.IsConnected)
-            {
-                AddToInventory(connData.AttachedLoop);    
-            }
-        }
-
-        private void AddToInventory(LevelData.LoopData loopData)
-        {
-            _loopInventory.Add(loopData.Radius);
-
-            foreach (LevelData.ConnectorData cData in loopData.Connectors)
-            {
-                AddToInventory(cData);
-            }
-        }
-
-        private void SpawnConnections(PlacedLoop loop, List<LevelData.ConnectorData> connectors)
-        {
-            if (connectors == null)
-                return;
-            
-            foreach (LevelData.ConnectorData connData in connectors)
-            {
-                if (connData.DoStartWith == false)
-                {
-                    AddToInventory(connData);
-                    continue;
-                }
-                
-                GameObject newObj = Instantiate(_prefabs.GetConnector(connData.Type), transform);
-                Connector conn = newObj.GetComponent<Connector>();
-                conn.SetParameter(connData.Value);
-                _connectors.Add(conn);
-                
-                Vector3 connPos = loop.LoopSpaceToPosition(connData.LoopSpace);
-                connPos.z = CONN_DISTANCE;
-                conn.transform.position = connPos;
-
-                if (connData.IsConnected == false)
-                {
-                    loop.AddConnection(conn, connData.LoopSpace, null);
-                    conn.SetLoops(loop, null);
-                    continue;
-                }
-                
-                if (connData.AttachedLoop.DoStartWith == false)
-                {
-                    loop.AddConnection(conn, connData.LoopSpace, null);
-                    conn.SetLoops(loop, null);
-                    
-                    AddToInventory(connData.AttachedLoop);
-                    continue;
-                }
-                
                 PlacedLoop newLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
+                newLoop.Init(loopData.Radius);
+                newLoop.transform.localPosition = new Vector3(loopData.Pos.x, loopData.Pos.y, LOOP_DISTANCE);
                 _loops.Add(newLoop);
-                newLoop.Init(loop, conn, connData.AttachedLoop.Radius);
-                SpawnConnections(newLoop, connData.AttachedLoop.Connectors);
-                loop.AddConnection(conn, connData.LoopSpace, newLoop);
-                newLoop.AddConnection(conn, (connData.LoopSpace + 0.5f) % 1, loop);
-                conn.SetLoops(loop, newLoop);
             }
+            
+            foreach (var connData in level.Connectors)
+            {
+                Connector newConnector = Instantiate(_prefabs.GetConnector(connData.Type), transform).GetComponent<Connector>();
+                newConnector.SetParameter(connData.Value);
+                newConnector.transform.localPosition = new Vector3(connData.Pos.x, connData.Pos.y, CONN_DISTANCE);
+                _connectors.Add(newConnector);
+            }
+            
+            RefreshAllConnections();
+        }
+
+        private void RefreshAllConnections()
+        {
+            foreach (Connector conn in _connectors)
+                conn.DetectConnections();
+            
+            foreach (PlacedLoop loop in _loops)
+                loop.DetectConnections();
         }
     }
 }
