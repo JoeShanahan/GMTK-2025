@@ -92,7 +92,6 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetProjectile());
             Projectile newProjectile = newObj.GetComponent<Projectile>();
-            newProjectile.SetAsPlayerPlaced();
             newProjectile.SetAsGhost(0);
             _currentGhost = newProjectile;
         }
@@ -104,7 +103,6 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetLoop());
             PlacedLoop newLoop = newObj.GetComponent<PlacedLoop>();
-            newLoop.SetAsPlayerPlaced();
 
             newLoop.SetAsGhost(radius);
             _currentGhost = newLoop;
@@ -117,7 +115,6 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetConnector(type));
             Connector newConn = newObj.GetComponent<Connector>();
-            newConn.SetAsPlayerPlaced();
 
             newConn.SetAsGhost(value);
             _currentGhost = newConn;

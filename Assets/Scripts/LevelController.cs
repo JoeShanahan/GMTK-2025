@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gmtk2025
@@ -34,6 +35,8 @@ namespace Gmtk2025
 
         private bool _isPlayingSolution;
         private LevelData _tempLevel;
+
+        private List<LevelData> _undoHistory = new();
         
         void Start()
         {
@@ -49,6 +52,8 @@ namespace Gmtk2025
 
         public void AddPlaceable(Placeable p)
         {
+            AddToUndoHistory();
+            
             if (p is Projectile proj)
             {
                 _projectiles.Add(proj);
@@ -63,12 +68,13 @@ namespace Gmtk2025
                 _connectors.Add(conn);
                 RefreshAllConnections();
             }
+            
+            p.SetAsPlayerPlaced();
         }
 
         private LevelData ConvertScreenToLevelData()
         {
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
-            var done = new List<PlacedLoop>();
             
             tempLevel.Projectiles = new List<Vector2>();
 
@@ -134,6 +140,26 @@ namespace Gmtk2025
             _loopInventory.Clear();
         }
 
+        public void Undo()
+        {
+            if (_isPlayingSolution)
+                return;
+            
+            if (_undoHistory.Count == 0)
+                return;
+            
+            LevelData prev = _undoHistory.Last();
+            _undoHistory.Remove(prev);
+            
+            ClearEverything();
+            SpawnLevel(prev);
+
+            foreach (Projectile proj in _projectiles)
+            {
+                proj.Freeze();
+            }
+        }
+
         public void SoftReset()
         {
             if (_isPlayingSolution == false)
@@ -152,6 +178,7 @@ namespace Gmtk2025
             }
 
             _isPlayingSolution = false;
+            _undoHistory.Clear();
         }
 
         public void HardReset()
@@ -165,6 +192,16 @@ namespace Gmtk2025
             }
 
             _isPlayingSolution = false;
+            _undoHistory.Clear();
+        }
+
+        private void AddToUndoHistory()
+        {
+            LevelData dat = ConvertScreenToLevelData();
+            _undoHistory.Add(dat);
+
+            while (_undoHistory.Count > 10)
+                _undoHistory.RemoveAt(0);
         }
 
         private void SpawnLevel(LevelData level)
@@ -181,6 +218,7 @@ namespace Gmtk2025
                 PlacedLoop newLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
                 newLoop.Init(loopData.Radius);
                 newLoop.transform.localPosition = new Vector3(loopData.Pos.x, loopData.Pos.y, LOOP_DISTANCE);
+                newLoop.Flags = loopData.Flags;
                 _loops.Add(newLoop);
             }
             
@@ -188,6 +226,7 @@ namespace Gmtk2025
             {
                 Connector newConnector = Instantiate(_prefabs.GetConnector(connData.Type), transform).GetComponent<Connector>();
                 newConnector.SetParameter(connData.Value);
+                newConnector.Flags = connData.Flags;
                 newConnector.transform.localPosition = new Vector3(connData.Pos.x, connData.Pos.y, CONN_DISTANCE);
                 _connectors.Add(newConnector);
             }

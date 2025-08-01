@@ -5,8 +5,8 @@ namespace Gmtk2025
     public abstract class Placeable : MonoBehaviour
     {
         public bool CanPlace { get; protected set; }
-        
-        public LevelDataFlags Flags { get; protected set; }
+
+        public LevelDataFlags Flags;
 
         public void SetAsPlayerPlaced()
         {

@@ -12,11 +12,10 @@ namespace Gmtk2025
         Launch,
         Binary,
         Countdown,
-        Portal
+        Portal,
+        Splitter
     }
-    
-    // TODO
-    // Connectors can't be placed too close to each other
+
     public abstract class Connector : Placeable
     {
         public virtual ConnectorType Type => ConnectorType.Unknown;
