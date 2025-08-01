@@ -438,6 +438,7 @@ GameObject:
   - component: {fileID: 302155077}
   - component: {fileID: 302155076}
   - component: {fileID: 302155079}
+  - component: {fileID: 302155080}
   m_Layer: 5
   m_Name: LevelSelectButton
   m_TagString: Untagged
@@ -571,6 +572,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasObject: {fileID: 76384429}
+--- !u!114 &302155080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302155074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &497696942
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,6 +920,7 @@ GameObject:
   - component: {fileID: 705705266}
   - component: {fileID: 705705265}
   - component: {fileID: 705705264}
+  - component: {fileID: 705705267}
   m_Layer: 5
   m_Name: PlayGameButton
   m_TagString: Untagged
@@ -1012,6 +1029,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705705262}
   m_CullTransparentMesh: 1
+--- !u!114 &705705267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705705262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1001 &711129418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1429,6 +1461,7 @@ GameObject:
   - component: {fileID: 898216228}
   - component: {fileID: 898216227}
   - component: {fileID: 898216230}
+  - component: {fileID: 898216231}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -1562,6 +1595,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasObject: {fileID: 661283951}
+--- !u!114 &898216231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898216225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &958225238
 GameObject:
   m_ObjectHideFlags: 0
