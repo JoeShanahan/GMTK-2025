@@ -10,7 +10,8 @@ namespace Gmtk2025
         Swap,
         Launch,
         Binary,
-        Countdown
+        Countdown,
+        Portal
     }
     
     // TODO
