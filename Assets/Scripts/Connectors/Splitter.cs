@@ -2,14 +2,9 @@ using UnityEngine;
 
 namespace Gmtk2025.Connectors
 {
-    public class Portal : Connector
+    public class Splitter : Connector
     {
-        public override ConnectorType Type => ConnectorType.Portal;
-
-        public int PortalId => _portalId;
-        public override int IntValue => _portalId;
-        
-        private int _portalId;
+        public override ConnectorType Type => ConnectorType.Splitter;
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
@@ -18,11 +13,6 @@ namespace Gmtk2025.Connectors
 
             PlacedLoop toLoop = currentLoop == _loopA ? _loopB : _loopA;
             projectile.SwapBetweenLoops(currentLoop, toLoop);
-        }
-        
-        public override void SetParameter(int number)
-        {
-            _portalId = number;
         }
     }
 }

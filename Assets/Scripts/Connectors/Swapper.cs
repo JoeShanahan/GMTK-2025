@@ -8,10 +8,10 @@ namespace Gmtk2025.Connectors
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-            if (_attachedLoop == null || _firstLoop == null)
+            if (_loopB == null || _loopA == null)
                 return;
 
-            PlacedLoop toLoop = currentLoop == _firstLoop ? _attachedLoop : _firstLoop;
+            PlacedLoop toLoop = currentLoop == _loopA ? _loopB : _loopA;
             projectile.SwapBetweenLoops(currentLoop, toLoop);
         }
     }
