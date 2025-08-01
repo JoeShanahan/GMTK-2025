@@ -63,7 +63,7 @@ namespace Gmtk2025
         public void LeaveLoop()
         {
             _rb.simulated = true;
-            _rb.linearVelocity = Vector3.up * 10; // TODO actually calculate
+            _rb.linearVelocity = GetVelocity();
             
             _currentLoop = null;
         }
@@ -121,6 +121,20 @@ namespace Gmtk2025
             float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign;
             _speed += speedChange;
 
+        }
+
+        private Vector3 GetVelocity()
+        {
+            Vector3 currentNormal = _currentLoop.GetTangent(transform.position);
+            
+            if (_speed > 0)
+            {
+                currentNormal = -currentNormal;
+            }
+            
+            float sign = _speed > 0 ? 1 : - 1;
+
+            return currentNormal * _speed * sign;
         }
 
         private void Move(float moveRemaining, int recursionDepth = 0, Connector toSkip = null)
