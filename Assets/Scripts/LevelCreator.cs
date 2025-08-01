@@ -59,6 +59,14 @@ namespace Gmtk2025
         {
             if (_currentGhost != null)
             {
+                if (_levelController.IsPlaying)
+                {
+                    Destroy(_currentGhost.gameObject);
+                    _currentGhost = null;
+                    _inventoryBar.OnSelectButton(null);
+                    return;
+                }
+                
                 Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
                 Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(mpos.x, mpos.y, _mainCamera.WorldToScreenPoint(transform.position).z));
 

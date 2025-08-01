@@ -63,7 +63,7 @@ namespace Gmtk2025
             public Vector2 WorldPos;
             public Connector Connector;
         }
-
+        
         public void Connect(Connector conn, PlacedLoop otherLoop)
         {
             foreach (ConnectorInfo myConn in _connectors)
@@ -104,6 +104,8 @@ namespace Gmtk2025
             }
             else
             {
+                worldPos.x = Mathf.RoundToInt(worldPos.x * 2) / 2f;
+                worldPos.y = Mathf.RoundToInt(worldPos.y * 2) / 2f;
                 transform.position = worldPos;
                 _line.colorGradient = _ghostInvalidColor;
                 CanPlace = false;
@@ -151,6 +153,8 @@ namespace Gmtk2025
 
         public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
         {
+            connector.SetLoops(this, otherLoop);
+            
             _connectors.Add(new ConnectorInfo()
             {
                 Connector = connector,

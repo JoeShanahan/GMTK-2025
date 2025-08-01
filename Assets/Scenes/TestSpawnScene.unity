@@ -1997,7 +1997,7 @@ MonoBehaviour:
   _moverRect: {fileID: 1534779943}
   _levelCreator: {fileID: 228570966}
   _parentBar: {fileID: 2113689708}
-  _buttonType: 0
+  _buttonType: 1
   _loopRadius: 0
   _connectorType: 1
   _connectorValue: 0
@@ -3784,7 +3784,7 @@ MonoBehaviour:
   _moverRect: {fileID: 1909373267}
   _levelCreator: {fileID: 228570966}
   _parentBar: {fileID: 2113689708}
-  _buttonType: 0
+  _buttonType: 1
   _loopRadius: 0
   _connectorType: 2
   _connectorValue: 0

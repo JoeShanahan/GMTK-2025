@@ -26,6 +26,7 @@ namespace Gmtk2025
         [SerializeField] private List<ConnectorItem> _connectorInventory;
 
         public IEnumerable<Connector> AllConnectors => _connectors;
+        public IEnumerable<PlacedLoop> AllLoops => _loops;
         
         private const float LOOP_DISTANCE = 0;
         private const float CONN_DISTANCE = -0.1f;
@@ -43,6 +44,8 @@ namespace Gmtk2025
                 proj.Freeze();
             }
         }
+
+        public bool IsPlaying => _isPlayingSolution;
 
         public void AddPlaceable(Placeable p)
         {
@@ -82,7 +85,30 @@ namespace Gmtk2025
             }
             else if (p is Connector conn)
             {
+                PlacedLoop closestLoop = null;
+                float smallestDistance = 0.1f;
                 
+                foreach (PlacedLoop pLoop in _loops)
+                {
+                    float distToConnector = Vector2.Distance(conn.transform.position, pLoop.transform.position);
+                    float distFromRadius = Mathf.Abs(distToConnector - pLoop.Radius);
+
+                    if (distFromRadius < smallestDistance)
+                    {
+                        closestLoop = pLoop;
+                        smallestDistance = distFromRadius;
+                    }
+                }
+
+                if (closestLoop == null)
+                {
+                    Debug.LogError("AHHHH SOMETHING WENT WRONG CANT FIND THE LOOP!");
+                    Destroy(conn.gameObject);
+                    return;
+                }
+                
+                closestLoop.Connect(conn, null);
+                _connectors.Add(conn);
             }
         }
 
