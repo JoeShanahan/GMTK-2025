@@ -13,7 +13,7 @@ namespace Gmtk2025
     
     // TODO
     // Connectors can't be placed too close to each other
-    public abstract class Connector : MonoBehaviour
+    public abstract class Connector : Placeable
     {
         public virtual ConnectorType Type => ConnectorType.Unknown;
         public virtual int IntValue => 0;

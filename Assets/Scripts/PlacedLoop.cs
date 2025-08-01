@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace Gmtk2025
 {
-    public class PlacedLoop : MonoBehaviour
+    public abstract class Placeable : MonoBehaviour
+    {
+        public virtual void SetAsGhost(float value)
+        {
+            
+        }
+    }
+    
+    public class PlacedLoop : Placeable
     {
         [Serializable]
         public class ConnectorInfo
@@ -27,9 +35,20 @@ namespace Gmtk2025
 
         [SerializeField] private List<ConnectorInfo> _connectors;
 
+        [SerializeField] private Gradient _ghostInvalidColor;
+        [SerializeField] private Gradient _ghostValidColor;
+        [SerializeField] private Gradient _normalColor;
+        
         private CircleCollider2D _collider;
         
         private const int POINT_COUNT = 48;
+
+        public override void SetAsGhost(float value)
+        {
+            _line.colorGradient = _ghostInvalidColor;
+            _radius = value;
+            SyncVisuals();
+        }
 
         public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
         {
@@ -47,7 +66,7 @@ namespace Gmtk2025
             transform.localPosition = position;
             SyncVisuals();
         }
-
+        
         public void Init(PlacedLoop parentLoop, Connector connector, float radius)
         {
             Vector2 directionVector = connector.transform.position - parentLoop.transform.position;
