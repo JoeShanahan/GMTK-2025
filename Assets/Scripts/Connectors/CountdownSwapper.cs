@@ -8,6 +8,9 @@ namespace Gmtk2025.Connectors
         [SerializeField] private int _currentValue;
         [SerializeField] private Transform[] _counters;
 
+        public override ConnectorType Type => ConnectorType.Countdown;
+        public override int IntValue => _maxValue;
+        
         public override void SetParameter(int number)
         {
             _maxValue = number;

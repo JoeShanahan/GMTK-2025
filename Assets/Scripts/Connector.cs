@@ -15,11 +15,14 @@ namespace Gmtk2025
     // Connectors can't be placed too close to each other
     public abstract class Connector : MonoBehaviour
     {
+        public virtual ConnectorType Type => ConnectorType.Unknown;
+        public virtual int IntValue => 0;
+        
         [SerializeField] protected PlacedLoop _firstLoop;
 
         [SerializeField] protected PlacedLoop _attachedLoop;
 
-public void SetLoops(PlacedLoop parent, PlacedLoop child)
+        public void SetLoops(PlacedLoop parent, PlacedLoop child)
         {
             _firstLoop = parent;
             _attachedLoop = child;

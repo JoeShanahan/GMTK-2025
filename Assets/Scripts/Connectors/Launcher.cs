@@ -4,6 +4,8 @@ namespace Gmtk2025.Connectors
 {
     public class Launcher : Connector
     {
+        public override ConnectorType Type => ConnectorType.Launch;
+        
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
             projectile.LeaveLoop();
