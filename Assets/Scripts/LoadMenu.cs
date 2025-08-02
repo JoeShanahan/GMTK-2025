@@ -1,10 +1,15 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gmtk2025
 {
     public class LoadMenu : MonoBehaviour
     {
+        [SerializeField] private InputField _codeOutput;
         [SerializeField] private RectTransform _listParent;
         [SerializeField] private GameObject _listItemTemplate;
         [SerializeField] private string _selectedFilename;
@@ -16,6 +21,7 @@ namespace Gmtk2025
         public void Close()
         {
             gameObject.SetActive(false);
+            _codeOutput.gameObject.SetActive(false);
         }
         
         public void Show()
@@ -68,12 +74,38 @@ namespace Gmtk2025
             if (string.IsNullOrEmpty(_selectedFilename) == false)
             {
                 LevelData level = _saveData.GetLevel(_selectedFilename);
-    
+
                 if (level != null)
+                {
+                    LevelCreator.CurrentFilename = _selectedFilename;
                     FindFirstObjectByType<LevelController>().HardReset(level);
+                }
             }
             
             Close();
+        }
+
+        public void ButtonPressExport()
+        {
+            if (string.IsNullOrEmpty(_selectedFilename) == false)
+            {
+                LevelData level = _saveData.GetLevel(_selectedFilename);
+
+                if (level != null)
+                {
+#if UNITY_EDITOR
+
+                    string path = $"Assets/level_{_selectedFilename}.asset";
+                    path = AssetDatabase.GenerateUniqueAssetPath(path);
+
+                    AssetDatabase.CreateAsset(level, path);
+                    AssetDatabase.SaveAssets();
+#endif
+                    _codeOutput.gameObject.SetActive(true);
+                    _codeOutput.text = level.ToBase64();
+
+                }
+            }
         }
     }
 }
