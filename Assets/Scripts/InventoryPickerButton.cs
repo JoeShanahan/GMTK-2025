@@ -61,10 +61,14 @@ namespace Gmtk2025
             _isSelected = false;
             DOTween.Kill(_moverRect);
             _moverRect.DOAnchorPosY(0, 0.5f).SetEase(Ease.OutExpo);
-
+            
             if (_buttonType == PickType.Delete)
             {
                 _levelCreator.StopDeleting();
+            }
+            else
+            {
+                _levelCreator.StopPlacing();
             }
         }
 

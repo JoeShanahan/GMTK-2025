@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gmtk2025
 {
@@ -26,7 +27,8 @@ namespace Gmtk2025
         [Space(16)] 
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
-
+        [SerializeField] private Text _buttonText;
+        
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
         
@@ -116,6 +118,20 @@ namespace Gmtk2025
             }
             
             return tempLevel;
+        }
+
+        public void PlayButtonPressed()
+        {
+            if (_isPlayingSolution)
+            {
+                SoftReset();
+                _buttonText.text = "Play";
+            }
+            else
+            {
+                StartPlayerSolution();
+                _buttonText.text = "Stop";
+            }
         }
 
         public void StartPlayerSolution()
