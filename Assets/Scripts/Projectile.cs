@@ -23,6 +23,17 @@ namespace Gmtk2025
 
         private bool _isGhost;
         
+        public Vector3 Velocity
+        {
+            get
+            {
+                if (IsOnLoop)
+                    return -Mathf.Sign(_speed) * _currentLoop.GetTangent(transform.position);
+                else
+                    return _rb.linearVelocity; 
+            }
+        }
+
         public override void SetAsGhost(float value)
         {
             _ghostSprite.gameObject.SetActive(true);
