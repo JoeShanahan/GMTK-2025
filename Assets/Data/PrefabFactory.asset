@@ -20,3 +20,4 @@ MonoBehaviour:
   _countdownPrefab: {fileID: 5627772780052397232, guid: c44628913cda74ad4b9e83be20e7c793, type: 3}
   _splitterPrefab: {fileID: 0}
   _portalPrefab: {fileID: 5627772780052397232, guid: be2a598301f354faead40ab7a9cb299c, type: 3}
+  _scoringPrefab: {fileID: 2891224357653047317, guid: 4ce3851bb777c854baab83ae32578a2e, type: 3}
