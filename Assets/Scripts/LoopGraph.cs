@@ -31,23 +31,22 @@ namespace Gmtk2025
         }
 
         private List<LoopData> _loops;
-        private List<LoopData> _roots = new();
-
-        public List<LoopData> Roots => _roots;
-
+        
         public void AddRoot(LoopData loop)
         {
             if (loop.IsRoot == false)
                 return;
 
             _loops.Add(loop);
-            _roots.Add(loop);
         }
 
         public void ConnectNewLoop(LoopData newLoop, LoopData targetLoop, ConnectorData connector)
         {
             if (!_loops.Contains(targetLoop))
                 return;
+
+            // TODO - proper validation of this method's inputs and outputs
+            // It is v easy to give this bad inputs and the consequences are unknown
 
             _loops.Add(newLoop);
         }
