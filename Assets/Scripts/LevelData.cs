@@ -35,6 +35,7 @@ namespace Gmtk2025
             public Vector2 Pos;
         }
 
+        public string Filename;
         public List<Vector2> Projectiles = new();
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();

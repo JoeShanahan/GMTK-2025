@@ -24,12 +24,23 @@ namespace Gmtk2025
         private InputActionReference _mousePressAction;
 
         private Camera _mainCamera;
+        private LevelEditorSaveData _saveData = new();
         
         private void OnEnable() 
         {
             _mousePositionAction.action.Enable();
             _mousePressAction.action.Enable();
             _mousePressAction.action.performed += OnMousePress;
+        }
+
+        public void SavePressed()
+        {
+            
+        }
+
+        public void LoadPressed()
+        {
+            _saveData.LoadFromPrefs();
         }
         
         private void OnMousePress(InputAction.CallbackContext context) 

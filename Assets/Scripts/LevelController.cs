@@ -181,10 +181,13 @@ namespace Gmtk2025
             _isPlayingSolution = false;
         }
 
-        public void HardReset()
+        public void HardReset(LevelData newLevel=null)
         {
+            if (newLevel == null)
+                newLevel = _currentLevel;
+            
             ClearEverything();
-            SpawnLevel(_currentLevel);
+            SpawnLevel(newLevel);
             
             foreach (Projectile proj in _projectiles)
             {
