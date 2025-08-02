@@ -21,6 +21,7 @@ namespace Gmtk2025
         [SerializeField] private List<PlacedLoop> _loops;
         [SerializeField] private List<Connector> _connectors;
         [SerializeField] private List<Projectile> _projectiles;
+        [SerializeField] private List<Scoring> _scoring;
 
         [Space(16)] 
         [SerializeField] private List<float> _loopInventory;
@@ -54,7 +55,7 @@ namespace Gmtk2025
         public void AddPlaceable(Placeable p)
         {
             AddToUndoHistory();
-            
+
             if (p is Projectile proj)
             {
                 _projectiles.Add(proj);
@@ -69,7 +70,12 @@ namespace Gmtk2025
                 _connectors.Add(conn);
                 RefreshAllConnections();
             }
-            
+            else if (p is Scoring scor)
+            {
+                _scoring.Add(scor);
+                Debug.Log("Adding scoring item to scene");
+            }
+
             p.SetAsPlayerPlaced();
         }
 
@@ -97,7 +103,7 @@ namespace Gmtk2025
                     Radius = loop.Radius
                 });
             }
-            
+
             foreach (Connector conn in _connectors)
             {
                 tempLevel.Connectors.Add(new LevelData.ConnectorData()

@@ -5,7 +5,7 @@ namespace Gmtk2025
 {
     public class InventoryPickerButton : MonoBehaviour
     {
-        private enum PickType { Loop, Connector, Projectile, Delete };
+        private enum PickType { Loop, Connector, Projectile, Scoring, Delete };
 
         [SerializeField] private RectTransform _moverRect;
         [SerializeField] private LevelCreator _levelCreator;
@@ -28,7 +28,7 @@ namespace Gmtk2025
                 Deselect();
                 return;
             }
-            
+
             if (_buttonType == PickType.Loop)
             {
                 _levelCreator.StartPlacingLoop(_loopRadius);
@@ -44,6 +44,10 @@ namespace Gmtk2025
             else if (_buttonType == PickType.Delete)
             {
                 _levelCreator.StartDeleting();
+            }
+            else if (_buttonType == PickType.Scoring)
+            {
+                _levelCreator.StartPlacingScoring();
             }
             
             _parentBar.OnSelectButton(this);
