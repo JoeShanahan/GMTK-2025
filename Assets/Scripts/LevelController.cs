@@ -151,6 +151,32 @@ namespace Gmtk2025
             _loopInventory.Clear();
         }
 
+        public void RemovePlaceable(Placeable p)
+        {
+            AddToUndoHistory();
+            
+            if (p is Projectile proj)
+            {
+                _projectiles.Remove(proj);
+            }
+            else if (p is PlacedLoop loop)
+            {
+                _loops.Remove(loop);
+                RefreshAllConnections();
+            }
+            else if (p is Connector conn)
+            {
+                _connectors.Remove(conn);
+                RefreshAllConnections();
+            }
+            else if (p is Scoring scor)
+            {
+                _scoring.Remove(scor);
+            }
+            
+            Destroy(p.gameObject);
+        }
+
         public void Undo()
         {
             if (_isPlayingSolution)

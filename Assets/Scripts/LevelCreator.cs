@@ -79,6 +79,18 @@ namespace Gmtk2025
                 _currentGhost = null;
                 _inventoryBar.OnSelectButton(null);
             }
+
+            if (_isDeleting)
+            {
+                Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
+                RaycastHit2D hit = Physics2D.Raycast(_mainCamera.ScreenToWorldPoint(mpos), Vector2.zero);
+
+                if(hit.collider != null)
+                {
+                    var thing = hit.collider.GetComponent<Placeable>();
+                    _levelController.RemovePlaceable(thing);
+                }
+            }
         }
 
         private void OnDisable()
