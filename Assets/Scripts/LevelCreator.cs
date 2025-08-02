@@ -33,6 +33,11 @@ namespace Gmtk2025
 
         [SerializeField] 
         private CreateMode _mode;
+
+        [SerializeField] 
+        private Transform _deleteCursor;
+
+        private bool _isDeleting;
         
         private Camera _mainCamera;
         private LevelEditorSaveData _saveData = new();
@@ -115,6 +120,18 @@ namespace Gmtk2025
             float clampedX = Mathf.Clamp(position.x, min.x, max.x);
             float clampedY = Mathf.Clamp(position.y, min.y, max.y);
             return new Vector3(clampedX, clampedY, position.z);
+        }
+
+        public void StartDeleting()
+        {
+            _isDeleting = true;
+            _deleteCursor?.gameObject?.SetActive(true);
+        }
+
+        public void StopDeleting()
+        {
+            _isDeleting = false;
+            _deleteCursor?.gameObject?.SetActive(true);
         }
 
         public void StartPlacingProjectile()
