@@ -120,6 +120,9 @@ namespace Gmtk2025
                 if (conn.LoopA == null)
                     continue;
 
+                if (conn.CanConnect == false)
+                    continue;
+
                 Vector3 dirToConnector = conn.transform.position - conn.LoopA.transform.position;
                 dirToConnector.z = 0;
                 dirToConnector.Normalize();

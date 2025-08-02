@@ -20,6 +20,7 @@ namespace Gmtk2025
     {
         public virtual ConnectorType Type => ConnectorType.Unknown;
         public virtual int IntValue => 0;
+        public virtual bool CanConnect => true; // things like portals don't connect
 
         public PlacedLoop LoopA => _loopA;
         public PlacedLoop LoopB => _loopB;
