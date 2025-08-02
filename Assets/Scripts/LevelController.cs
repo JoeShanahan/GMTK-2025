@@ -73,7 +73,7 @@ namespace Gmtk2025
             p.SetAsPlayerPlaced();
         }
 
-        private LevelData ConvertScreenToLevelData()
+        public LevelData ConvertScreenToLevelData()
         {
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
             

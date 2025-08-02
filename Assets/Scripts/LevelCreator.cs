@@ -5,6 +5,8 @@ namespace Gmtk2025
 {
     public class LevelCreator : MonoBehaviour
     {
+        public static string CurrentFilename;
+
         [SerializeField] 
         private PrefabFactory _prefabs;
         

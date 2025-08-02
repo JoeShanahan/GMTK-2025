@@ -48,6 +48,8 @@ namespace Gmtk2025
 
         private void OnButtonPress(LoadMenuItem itm)
         {
+            _selectedFilename = itm.Filename;
+            
             foreach (LoadMenuItem otherItm in _items)
             {
                 if (otherItm == itm)

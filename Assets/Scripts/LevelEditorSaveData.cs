@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Gmtk2025
@@ -8,7 +9,7 @@ namespace Gmtk2025
     public class LevelEditorSaveData
     {
         public List<string> Filenames = new();
-
+        
         public void LoadFromPrefs()
         {
             if (PlayerPrefs.HasKey("SavedLevels") == false)
@@ -18,7 +19,6 @@ namespace Gmtk2025
             PlayerPrefs.GetString("SavedLevels");
             
             JsonUtility.FromJsonOverwrite(metaJson, this);
-            Debug.Log($"Loaded {Filenames.Count} levels from prefs!");
         }
 
         public LevelData GetLevel(string filename)
@@ -42,9 +42,9 @@ namespace Gmtk2025
             string levelJson = JsonUtility.ToJson(level);
             PlayerPrefs.SetString(prefsKey, levelJson);
 
+            Filenames = new List<string>(Filenames.ToHashSet());
             string metaJson = JsonUtility.ToJson(this);
             PlayerPrefs.SetString("SavedLevels", metaJson);
-            Debug.Log(metaJson);
 
             PlayerPrefs.Save();
         }
