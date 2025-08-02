@@ -8,7 +8,8 @@ namespace Gmtk2025.Connectors
 
         public int PortalId => _portalId;
         public override int IntValue => _portalId;
-        
+        public override bool CanConnect => false;
+
         private int _portalId;
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
