@@ -97,6 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8042041018279446502}
   - component: {fileID: 4269404417279626692}
+  - component: {fileID: 5338408745757106805}
   m_Layer: 0
   m_Name: Connector-Launcher
   m_TagString: Untagged
@@ -133,12 +134,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eab90836a22e4e4b9c85fee50194131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Flags: 0
   _ghostSprite: {fileID: 6004338660331454313}
   _realVisuals: {fileID: 118725769209699094}
-  _firstLoop: {fileID: 0}
-  _attachedLoop: {fileID: 0}
+  _loopA: {fileID: 0}
+  _loopB: {fileID: 0}
   _invalidColor: {r: 1, g: 0, b: 0, a: 0.7}
   _validColor: {r: 0, g: 1, b: 0, a: 0.9}
+--- !u!58 &5338408745757106805
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5246701702524191885}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 5
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 1.5
 --- !u!1 &5831694104703390916
 GameObject:
   m_ObjectHideFlags: 0

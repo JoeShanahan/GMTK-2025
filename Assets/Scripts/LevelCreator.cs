@@ -79,6 +79,18 @@ namespace Gmtk2025
                 _currentGhost = null;
                 _inventoryBar.OnSelectButton(null);
             }
+
+            if (_isDeleting)
+            {
+                Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
+                RaycastHit2D hit = Physics2D.Raycast(_mainCamera.ScreenToWorldPoint(mpos), Vector2.zero);
+
+                if(hit.collider != null)
+                {
+                    var thing = hit.collider.GetComponent<Placeable>();
+                    _levelController.RemovePlaceable(thing);
+                }
+            }
         }
 
         private void OnDisable()
@@ -95,6 +107,15 @@ namespace Gmtk2025
 
         private void Update()
         {
+            Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
+            Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(mpos.x, mpos.y, _mainCamera.WorldToScreenPoint(transform.position).z));
+            Vector3 clampedPosition = ClampToCameraBounds(worldPosition);
+            
+            if (_isDeleting && _deleteCursor != null)
+            {
+                _deleteCursor.position = clampedPosition;
+            }
+            
             if (_currentGhost != null)
             {
                 if (_levelController.IsPlaying)
@@ -105,10 +126,6 @@ namespace Gmtk2025
                     return;
                 }
 
-                Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
-                Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(mpos.x, mpos.y, _mainCamera.WorldToScreenPoint(transform.position).z));
-
-                Vector3 clampedPosition = ClampToCameraBounds(worldPosition);
                 _currentGhost.MoveTo(clampedPosition);
             }
         }
@@ -126,13 +143,21 @@ namespace Gmtk2025
         public void StartDeleting()
         {
             _isDeleting = true;
-            _deleteCursor?.gameObject?.SetActive(true);
+            
+            if (_deleteCursor != null)
+            {
+                _deleteCursor.gameObject.SetActive(true);
+            }
         }
 
         public void StopDeleting()
         {
             _isDeleting = false;
-            _deleteCursor?.gameObject?.SetActive(true);
+            
+            if (_deleteCursor != null)
+            {
+                _deleteCursor.gameObject.SetActive(false);
+            }
         }
 
         public void StartPlacingProjectile()
