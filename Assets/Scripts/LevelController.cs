@@ -77,11 +77,15 @@ namespace Gmtk2025
         {
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
             
-            tempLevel.Projectiles = new List<Vector2>();
+            tempLevel.Projectiles = new List<LevelData.ProjectileData>();
 
             foreach (Projectile proj in _projectiles)
             {
-                tempLevel.Projectiles.Add(proj.transform.localPosition);
+                tempLevel.Projectiles.Add(new LevelData.ProjectileData()
+                {
+                    Flags = proj.Flags,
+                    Pos = proj.transform.localPosition
+                });
             }
 
             foreach (PlacedLoop loop in _loops)
@@ -209,10 +213,11 @@ namespace Gmtk2025
 
         private void SpawnLevel(LevelData level)
         {
-            foreach (Vector2 projPos in level.Projectiles)
+            foreach (var projData in level.Projectiles)
             {
                 Projectile newProjectile = Instantiate(_prefabs.GetProjectile(), transform).GetComponent<Projectile>();
-                newProjectile.transform.localPosition = new Vector3(projPos.x, projPos.y, PROJ_DISTANCE);
+                newProjectile.transform.localPosition = new Vector3(projData.Pos.x, projData.Pos.y, PROJ_DISTANCE);
+                newProjectile.Flags = projData.Flags;
                 _projectiles.Add(newProjectile);
             }
             

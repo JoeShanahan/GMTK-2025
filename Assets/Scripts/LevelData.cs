@@ -19,6 +19,13 @@ namespace Gmtk2025
     public class LevelData : ScriptableObject
     {
         [Serializable]
+        public class ProjectileData
+        {
+            public LevelDataFlags Flags;
+            public Vector2 Pos;
+        }
+        
+        [Serializable]
         public class LoopData
         {
             public LevelDataFlags Flags;
@@ -36,7 +43,7 @@ namespace Gmtk2025
         }
 
         public string Filename;
-        public List<Vector2> Projectiles = new();
+        public List<ProjectileData> Projectiles = new();
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();
 
