@@ -252,8 +252,6 @@ namespace Gmtk2025
             if (!_isPlayingSolution)
                 return;
 
-            Debug.Log("Hello");
-
             ClearProjectileFlags();
 
             foreach (var projectile in _projectiles)
