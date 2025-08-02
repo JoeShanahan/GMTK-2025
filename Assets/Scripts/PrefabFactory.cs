@@ -12,10 +12,13 @@ namespace Gmtk2025
         [SerializeField] private GameObject _launchPrefab;
         [SerializeField] private GameObject _binaryPrefab;
         [SerializeField] private GameObject _countdownPrefab;
+        [SerializeField] private GameObject _scoringPrefab;
 
         public GameObject GetLoop() => _loopPrefab;
         
         public GameObject GetProjectile() => _projectilePrefab;
+
+        public GameObject GetScoring() => _scoringPrefab;
 
         public GameObject GetConnector(ConnectorType type)
         {

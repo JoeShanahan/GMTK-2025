@@ -18,3 +18,4 @@ MonoBehaviour:
   _launchPrefab: {fileID: 5246701702524191885, guid: 2d8dd050bd112420785b224c4b9dc2b0, type: 3}
   _binaryPrefab: {fileID: 5627772780052397232, guid: 6cd17d6bd0db148188a4edc6ebbca386, type: 3}
   _countdownPrefab: {fileID: 5627772780052397232, guid: c44628913cda74ad4b9e83be20e7c793, type: 3}
+  _scoringPrefab: {fileID: 2891224357653047317, guid: 4ce3851bb777c854baab83ae32578a2e, type: 3}
