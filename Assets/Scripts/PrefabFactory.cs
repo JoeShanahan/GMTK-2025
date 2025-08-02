@@ -15,6 +15,9 @@ namespace Gmtk2025
         [SerializeField] private GameObject _splitterPrefab;
         [SerializeField] private GameObject _portalPrefab;
         [SerializeField] private GameObject _scoringPrefab;
+        [SerializeField] private GameObject _flagPrefab;
+
+        public GameObject Flag => _flagPrefab;
 
         public GameObject GetLoop() => _loopPrefab;
         

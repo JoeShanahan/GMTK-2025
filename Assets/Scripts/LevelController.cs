@@ -27,6 +27,8 @@ namespace Gmtk2025
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
 
+        private List<GameObject> _riderFlags = new();
+
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
         
@@ -232,6 +234,35 @@ namespace Gmtk2025
 
             _isPlayingSolution = false;
             _undoHistory.Clear();
+        }
+
+        public void ClearProjectileFlags()
+        {
+            // We will destroy all of extant flag GameObjects and spawn new ones
+            // Object pooling would be more efficient but life goes on
+            while (_riderFlags.Count > 0)
+            {
+                Destroy(_riderFlags[0]);
+                _riderFlags.RemoveAt(0);
+            }
+        }
+        
+        public void GoProjectileFlags()
+        {
+            if (!_isPlayingSolution)
+                return;
+
+            Debug.Log("Hello");
+
+            ClearProjectileFlags();
+
+            foreach (var projectile in _projectiles)
+            {
+                Quaternion velocityDirection = Quaternion.FromToRotation(new(1, 0, 0), projectile.Velocity);
+
+                var flag = Instantiate(_prefabs.Flag, projectile.transform.position, velocityDirection, transform);
+                _riderFlags.Add(flag);
+            }
         }
 
         private void AddToUndoHistory()

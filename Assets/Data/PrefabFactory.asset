@@ -21,3 +21,4 @@ MonoBehaviour:
   _splitterPrefab: {fileID: 0}
   _portalPrefab: {fileID: 5627772780052397232, guid: be2a598301f354faead40ab7a9cb299c, type: 3}
   _scoringPrefab: {fileID: 2891224357653047317, guid: 4ce3851bb777c854baab83ae32578a2e, type: 3}
+  _flagPrefab: {fileID: 7708956291022191099, guid: 3f1b307ec58d1254eb7e77c1cffd7581, type: 3}
