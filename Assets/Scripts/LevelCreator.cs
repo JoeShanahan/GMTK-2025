@@ -7,6 +7,12 @@ namespace Gmtk2025
     {
         public static string CurrentFilename;
 
+        public enum CreateMode
+        {
+            Creating,
+            Playing
+        };
+
         [SerializeField] 
         private PrefabFactory _prefabs;
         
@@ -25,8 +31,21 @@ namespace Gmtk2025
         [SerializeField] 
         private InputActionReference _mousePressAction;
 
+        [SerializeField] 
+        private CreateMode _mode;
+        
         private Camera _mainCamera;
         private LevelEditorSaveData _saveData = new();
+
+        public void SetFreeBuild()
+        {
+            _mode = CreateMode.Creating;
+        }
+
+        public void SetPlaying()
+        {
+            _mode = CreateMode.Playing;
+        }
         
         private void OnEnable() 
         {
@@ -106,6 +125,7 @@ namespace Gmtk2025
             GameObject newObj = Instantiate(_prefabs.GetProjectile());
             Projectile newProjectile = newObj.GetComponent<Projectile>();
             newProjectile.SetAsGhost(0);
+            newProjectile.SetCreateMode(_mode);
             _currentGhost = newProjectile;
         }
         
@@ -118,6 +138,7 @@ namespace Gmtk2025
             PlacedLoop newLoop = newObj.GetComponent<PlacedLoop>();
 
             newLoop.SetAsGhost(radius);
+            newLoop.SetCreateMode(_mode);
             _currentGhost = newLoop;
         }
 
@@ -130,6 +151,7 @@ namespace Gmtk2025
             Connector newConn = newObj.GetComponent<Connector>();
 
             newConn.SetAsGhost(value);
+            newConn.SetCreateMode(_mode);
             _currentGhost = newConn;
         }
     }
