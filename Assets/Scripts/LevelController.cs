@@ -28,6 +28,9 @@ namespace Gmtk2025
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
         [SerializeField] private Text _buttonText;
+
+
+        [SerializeField] private LevelEditorUI _levelEditUI;
         
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
@@ -183,11 +186,13 @@ namespace Gmtk2025
         {
             if (_isPlayingSolution)
             {
+                _levelEditUI?.OnStopPlaying();
                 SoftReset();
                 _buttonText.text = "Play";
             }
             else
             {
+                _levelEditUI?.OnStartPlaying();
                 StartPlayerSolution();
                 _buttonText.text = "Stop";
             }
@@ -197,7 +202,7 @@ namespace Gmtk2025
         {
             if (_isPlayingSolution)
                 return;
-            
+
             _tempLevel = ConvertScreenToLevelData();
             
             foreach (Projectile proj in _projectiles)
