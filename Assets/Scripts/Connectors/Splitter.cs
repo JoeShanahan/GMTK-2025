@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Gmtk2025.Connectors
 {
-    public class Swapper : Connector
+    public class Splitter : Connector
     {
-        public override ConnectorType Type => ConnectorType.Swap;
+        public override ConnectorType Type => ConnectorType.Splitter;
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {

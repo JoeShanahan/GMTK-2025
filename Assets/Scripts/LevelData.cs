@@ -7,33 +7,38 @@ using UnityEngine;
 
 namespace Gmtk2025
 {
+    [Flags]
+    public enum LevelDataFlags
+    {
+        None = 0,
+        StartWith = 1,
+        WasPlacedByPlayer = 2
+    }
+    
     [CreateAssetMenu]
     public class LevelData : ScriptableObject
     {
         [Serializable]
         public class LoopData
         {
-            public bool DoStartWith;
+            public LevelDataFlags Flags;
             public float Radius;
-            public List<ConnectorData> Connectors;
+            public Vector2 Pos;
         }
 
         [Serializable]
         public class ConnectorData
         {
             public ConnectorType Type;
+            public LevelDataFlags Flags;
             public int Value;
-            public float LoopSpace;
-            public bool DoStartWith;
-
-            [Space(16)]
-            public bool IsConnected;
-            public LoopData AttachedLoop;
+            public Vector2 Pos;
         }
 
-        public List<Vector2> Projectiles;
-        public Vector2 StartingLoopPosition;
-        public LoopData StartingLoop;
+        public string Filename;
+        public List<Vector2> Projectiles = new();
+        public List<LoopData> Loops = new();
+        public List<ConnectorData> Connectors = new();
 
         public string ToBase64()
         {

@@ -5,6 +5,8 @@ namespace Gmtk2025
 {
     public class LevelCreator : MonoBehaviour
     {
+        public static string CurrentFilename;
+
         [SerializeField] 
         private PrefabFactory _prefabs;
         
@@ -24,12 +26,23 @@ namespace Gmtk2025
         private InputActionReference _mousePressAction;
 
         private Camera _mainCamera;
+        private LevelEditorSaveData _saveData = new();
         
         private void OnEnable() 
         {
             _mousePositionAction.action.Enable();
             _mousePressAction.action.Enable();
             _mousePressAction.action.performed += OnMousePress;
+        }
+
+        public void SavePressed()
+        {
+            
+        }
+
+        public void LoadPressed()
+        {
+            _saveData.LoadFromPrefs();
         }
         
         private void OnMousePress(InputAction.CallbackContext context) 
@@ -84,6 +97,17 @@ namespace Gmtk2025
             float clampedY = Mathf.Clamp(position.y, min.y, max.y);
             return new Vector3(clampedX, clampedY, position.z);
         }
+
+        public void StartPlacingProjectile()
+        {
+            if (_currentGhost != null)
+                Destroy(_currentGhost.gameObject);
+            
+            GameObject newObj = Instantiate(_prefabs.GetProjectile());
+            Projectile newProjectile = newObj.GetComponent<Projectile>();
+            newProjectile.SetAsGhost(0);
+            _currentGhost = newProjectile;
+        }
         
         public void StartPlacingLoop(float radius)
         {
@@ -92,6 +116,7 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetLoop());
             PlacedLoop newLoop = newObj.GetComponent<PlacedLoop>();
+
             newLoop.SetAsGhost(radius);
             _currentGhost = newLoop;
         }
@@ -103,6 +128,7 @@ namespace Gmtk2025
             
             GameObject newObj = Instantiate(_prefabs.GetConnector(type));
             Connector newConn = newObj.GetComponent<Connector>();
+
             newConn.SetAsGhost(value);
             _currentGhost = newConn;
         }

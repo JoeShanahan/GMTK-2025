@@ -12,6 +12,8 @@ namespace Gmtk2025
         [SerializeField] private GameObject _launchPrefab;
         [SerializeField] private GameObject _binaryPrefab;
         [SerializeField] private GameObject _countdownPrefab;
+        [SerializeField] private GameObject _splitterPrefab;
+        [SerializeField] private GameObject _portalPrefab;
 
         public GameObject GetLoop() => _loopPrefab;
         
@@ -26,6 +28,8 @@ namespace Gmtk2025
                 ConnectorType.Launch => _launchPrefab,
                 ConnectorType.Binary => _binaryPrefab,
                 ConnectorType.Countdown => _countdownPrefab,
+                ConnectorType.Splitter => _splitterPrefab,
+                ConnectorType.Portal => _portalPrefab,
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
             };
         }

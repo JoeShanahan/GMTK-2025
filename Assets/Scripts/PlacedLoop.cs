@@ -3,28 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gmtk2025
-{
-    public abstract class Placeable : MonoBehaviour
-    {
-        public bool CanPlace { get; protected set; }
-
-        
-        public virtual void SetAsGhost(float value)
-        {
-            
-        }
-        
-        public virtual void StopBeingAGhost()
-        {
-            
-        }
-
-        public virtual void MoveTo(Vector3 worldPos)
-        {
-            transform.position = worldPos;
-        }
-    }
-    
+{ 
     public class PlacedLoop : Placeable
     {
         [Serializable]
@@ -34,8 +13,6 @@ namespace Gmtk2025
             
             [Tooltip("Value between 0 and 1, position in loop-space")]
             public float Offset;
-
-            public PlacedLoop OtherLoop;
         }
 
         public float Radius => _radius;
@@ -63,22 +40,32 @@ namespace Gmtk2025
             public Vector2 WorldPos;
             public Connector Connector;
         }
-        
-        public void Connect(Connector conn, PlacedLoop otherLoop)
+
+        public void DetectConnections()
         {
-            foreach (ConnectorInfo myConn in _connectors)
+            var level = FindFirstObjectByType<LevelController>();
+
+            _connectors = new List<ConnectorInfo>();
+
+
+            foreach (Connector conn in level.AllConnectors)
             {
-                if (myConn.Connector == conn)
+                float dist = Vector2.Distance(conn.transform.position, transform.position);
+                float distFromRadius = Mathf.Abs(Radius - dist);
+                
+                if (distFromRadius < 0.0001f)
                 {
-                    myConn.OtherLoop = otherLoop;
-                    return;
+                    float offset = PositionToLoopSpace(conn.transform.position);
+                    
+                    _connectors.Add(new ConnectorInfo()
+                    {
+                        Connector = conn,
+                        Offset = offset
+                    });
                 }
             }
-
-            float offset = PositionToLoopSpace(conn.transform.position);
-            AddConnection(conn, offset, otherLoop);
         }
-
+        
         public override void MoveTo(Vector3 worldPos)
         {
             SnapPoint closestSnap = null;
@@ -151,37 +138,8 @@ namespace Gmtk2025
             _line.colorGradient = _normalColor;
         }
 
-        public void AddConnection(Connector connector, float offset, PlacedLoop otherLoop)
+        public void Init(float radius)
         {
-            connector.SetLoops(this, otherLoop);
-            
-            _connectors.Add(new ConnectorInfo()
-            {
-                Connector = connector,
-                Offset = offset,
-                OtherLoop = otherLoop,
-            });
-        }
-        
-        public void InitFirstLoop(Vector3 position, float radius)
-        {
-            _radius = radius;
-            transform.localPosition = position;
-            SyncVisuals();
-        }
-        
-        public void Init(PlacedLoop parentLoop, Connector connector, float radius)
-        {
-            Vector2 directionVector = connector.transform.position - parentLoop.transform.position;
-            directionVector.Normalize();
-
-            Vector3 pos = connector.transform.position;
-            pos.x += directionVector.x * radius;
-            pos.y += directionVector.y * radius;
-            pos.z = parentLoop.transform.position.z;
-            
-            transform.position = pos;
-            
             _radius = radius;
             SyncVisuals();
         }
@@ -270,7 +228,6 @@ namespace Gmtk2025
             return false;
         }
 
-        [ContextMenu("Sync!")]
         public void SyncVisuals()
         {
             Vector3[] positions = new Vector3[POINT_COUNT + 1];

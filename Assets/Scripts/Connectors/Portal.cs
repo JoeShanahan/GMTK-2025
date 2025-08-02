@@ -4,15 +4,34 @@ namespace Gmtk2025.Connectors
 {
     public class Portal : Connector
     {
-        public override ConnectorType Type => ConnectorType.Swap;
+        public override ConnectorType Type => ConnectorType.Portal;
+
+        public int PortalId => _portalId;
+        public override int IntValue => _portalId;
+        
+        private int _portalId;
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
-            if (_attachedLoop == null || _firstLoop == null)
-                return;
+            var level = FindFirstObjectByType<LevelController>();
 
-            PlacedLoop toLoop = currentLoop == _firstLoop ? _attachedLoop : _firstLoop;
-            projectile.SwapBetweenLoops(currentLoop, toLoop);
+            foreach (Connector conn in level.AllConnectors)
+            {
+                if (conn == this || conn.Type != ConnectorType.Portal || conn.IntValue != IntValue)
+                    continue;
+                
+                if (conn is Portal otherPortal)
+                {
+                    PlacedLoop destLoop = otherPortal._loopA;
+                    projectile.WarpTo(conn.transform.position, destLoop);
+                    return;
+                }
+            }
+        }
+        
+        public override void SetParameter(int number)
+        {
+            _portalId = number;
         }
     }
 }
