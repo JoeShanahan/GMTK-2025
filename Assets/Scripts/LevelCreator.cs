@@ -34,10 +34,8 @@ namespace Gmtk2025
 
         private void OnMousePress(InputAction.CallbackContext context)
         {
-            Debug.Log("Current Ghost: " + _currentGhost + "  Can place? " + _currentGhost.CanPlace);
             if (_currentGhost != null && _currentGhost.CanPlace)
             {
-                Debug.Log("If current ghost is not null and can place this is ran");
                 _currentGhost.StopBeingAGhost();
                 _levelController.AddPlaceable(_currentGhost);
                 _currentGhost = null;

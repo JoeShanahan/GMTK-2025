@@ -27,7 +27,7 @@ namespace Gmtk2025
 
         public override void MoveTo(Vector3 worldPos)
         {
-            canPlace = true;
+            CanPlace = true;
             worldPos.x = Mathf.RoundToInt(worldPos.x * 4) / 4f;
             worldPos.y = Mathf.RoundToInt(worldPos.y * 4) / 4f;
 

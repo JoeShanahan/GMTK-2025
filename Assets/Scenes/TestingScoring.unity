@@ -311,6 +311,7 @@ MonoBehaviour:
   _loops: []
   _connectors: []
   _projectiles: []
+  _scoring: []
   _loopInventory: []
   _connectorInventory: []
 --- !u!4 &100686927
