@@ -8,9 +8,16 @@ namespace Gmtk2025
 
         public LevelDataFlags Flags;
 
+        protected LevelCreator.CreateMode _createMode;
+
         public void SetAsPlayerPlaced()
         {
             Flags |= LevelDataFlags.WasPlacedByPlayer;
+        }
+        
+        public void SetCreateMode(LevelCreator.CreateMode mode)
+        {
+            _createMode = mode;
         }
         
         public virtual void SetAsGhost(float value)

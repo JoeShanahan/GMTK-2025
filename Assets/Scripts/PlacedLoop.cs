@@ -69,7 +69,7 @@ namespace Gmtk2025
         public override void MoveTo(Vector3 worldPos)
         {
             SnapPoint closestSnap = null;
-            float minDist = 1f;
+            float minDist = 1.25f;
 
             foreach (SnapPoint snap in _availableSnapPoints)
             {
@@ -89,10 +89,17 @@ namespace Gmtk2025
                 _line.colorGradient = _ghostValidColor;
                 CanPlace = true;
             }
-            else
+            else if (_createMode == LevelCreator.CreateMode.Creating)
             {
                 worldPos.x = Mathf.RoundToInt(worldPos.x * 2) / 2f;
                 worldPos.y = Mathf.RoundToInt(worldPos.y * 2) / 2f;
+                transform.position = worldPos;
+                
+                _line.colorGradient = _ghostValidColor;
+                CanPlace = true;
+            }
+            else
+            {
                 transform.position = worldPos;
                 _line.colorGradient = _ghostInvalidColor;
                 CanPlace = false;

@@ -7,26 +7,51 @@ namespace Gmtk2025
     {
         public static string CurrentFilename;
 
+        public enum CreateMode
+        {
+            Creating,
+            Playing
+        };
+
         [SerializeField] 
         private PrefabFactory _prefabs;
-        
+
         [SerializeField]
         private Placeable _currentGhost;
 
-        [SerializeField] 
+        [SerializeField]
         private LevelController _levelController;
 
-        [SerializeField] 
+        [SerializeField]
         private InventoryBar _inventoryBar;
-        
-        [SerializeField] 
+
+        [SerializeField]
         private InputActionReference _mousePositionAction;
-        
-        [SerializeField] 
+
+        [SerializeField]
         private InputActionReference _mousePressAction;
 
+        [SerializeField] 
+        private CreateMode _mode;
+
+        [SerializeField] 
+        private Transform _deleteCursor;
+
+        private bool _isDeleting;
+        
         private Camera _mainCamera;
+
         private LevelEditorSaveData _saveData = new();
+
+        public void SetFreeBuild()
+        {
+            _mode = CreateMode.Creating;
+        }
+
+        public void SetPlaying()
+        {
+            _mode = CreateMode.Playing;
+        }
         
         private void OnEnable() 
         {
@@ -55,8 +80,8 @@ namespace Gmtk2025
                 _inventoryBar.OnSelectButton(null);
             }
         }
-        
-        private void OnDisable() 
+
+        private void OnDisable()
         {
             _mousePositionAction.action.Disable();
             _mousePressAction.action.Disable();
@@ -79,7 +104,7 @@ namespace Gmtk2025
                     _inventoryBar.OnSelectButton(null);
                     return;
                 }
-                
+
                 Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
                 Vector3 worldPosition = _mainCamera.ScreenToWorldPoint(new Vector3(mpos.x, mpos.y, _mainCamera.WorldToScreenPoint(transform.position).z));
 
@@ -87,8 +112,8 @@ namespace Gmtk2025
                 _currentGhost.MoveTo(clampedPosition);
             }
         }
-        
-        private Vector3 ClampToCameraBounds(Vector3 position) 
+
+        private Vector3 ClampToCameraBounds(Vector3 position)
         {
             Vector3 min = _mainCamera.ViewportToWorldPoint(new Vector3(0, 0, _mainCamera.WorldToScreenPoint(transform.position).z));
             Vector3 max = _mainCamera.ViewportToWorldPoint(new Vector3(1, 1, _mainCamera.WorldToScreenPoint(transform.position).z));
@@ -98,26 +123,40 @@ namespace Gmtk2025
             return new Vector3(clampedX, clampedY, position.z);
         }
 
+        public void StartDeleting()
+        {
+            _isDeleting = true;
+            _deleteCursor?.gameObject?.SetActive(true);
+        }
+
+        public void StopDeleting()
+        {
+            _isDeleting = false;
+            _deleteCursor?.gameObject?.SetActive(true);
+        }
+
         public void StartPlacingProjectile()
         {
             if (_currentGhost != null)
                 Destroy(_currentGhost.gameObject);
-            
+
             GameObject newObj = Instantiate(_prefabs.GetProjectile());
             Projectile newProjectile = newObj.GetComponent<Projectile>();
             newProjectile.SetAsGhost(0);
+            newProjectile.SetCreateMode(_mode);
             _currentGhost = newProjectile;
         }
-        
+
         public void StartPlacingLoop(float radius)
         {
             if (_currentGhost != null)
                 Destroy(_currentGhost.gameObject);
-            
+
             GameObject newObj = Instantiate(_prefabs.GetLoop());
             PlacedLoop newLoop = newObj.GetComponent<PlacedLoop>();
 
             newLoop.SetAsGhost(radius);
+            newLoop.SetCreateMode(_mode);
             _currentGhost = newLoop;
         }
 
@@ -125,12 +164,29 @@ namespace Gmtk2025
         {
             if (_currentGhost != null)
                 Destroy(_currentGhost.gameObject);
-            
+
             GameObject newObj = Instantiate(_prefabs.GetConnector(type));
             Connector newConn = newObj.GetComponent<Connector>();
 
             newConn.SetAsGhost(value);
+            newConn.SetCreateMode(_mode);
             _currentGhost = newConn;
+        }
+
+        public void StartPlacingScoring()
+        {
+            Debug.Log("Trying to place scoring item");
+            if (_currentGhost != null)
+            {
+                Debug.Log("Trying to destroy ghost");
+                Destroy(_currentGhost.gameObject);
+            }
+
+            GameObject newObj = Instantiate(_prefabs.GetScoring());
+            Scoring newScoring = newObj.GetComponent<Scoring>();
+
+            newScoring.SetAsGhost(0);
+            _currentGhost = newScoring;
         }
     }
 }
