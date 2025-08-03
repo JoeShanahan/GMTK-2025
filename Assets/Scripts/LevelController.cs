@@ -115,6 +115,7 @@ namespace Gmtk2025
             {
                 _currentLevel = _levelDataHolder.CurrentLevel;
                 SpawnLevel(_currentLevel, true);
+                _gameEditUI.SetBackground(_currentLevel.Background);
 
                 foreach (Projectile proj in _projectiles)
                 {

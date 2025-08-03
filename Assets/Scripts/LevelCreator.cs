@@ -113,6 +113,7 @@ namespace Gmtk2025
                 Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
                 RaycastHit2D hit = Physics2D.Raycast(_mainCamera.ScreenToWorldPoint(mpos), Vector2.zero);
 
+                Debug.Log(hit.collider);
                 if(hit.collider != null)
                 {
                     var thing = hit.collider.GetComponent<Placeable>();

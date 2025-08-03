@@ -12,6 +12,16 @@ namespace Gmtk2025
         [SerializeField] private LevelDataHolder _levels;
         [SerializeField] private CanvasGroup _levelCompleteScreen;
         [SerializeField] private InventoryBar _inventory;
+        [SerializeField] private Image _bg;
+        
+        public void SetBackground(Sprite bg)
+        {
+            if (bg != null)
+            {
+                _bg.sprite = bg;
+                _bg.gameObject.SetActive(true);
+            }
+        }
         
         public void SetInventory(List<float> loops, List<ConnectorItem> connectors)
         {

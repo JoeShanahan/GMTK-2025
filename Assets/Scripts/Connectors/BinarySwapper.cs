@@ -33,7 +33,7 @@ namespace Gmtk2025.Connectors
 
         private void SetColor()
         {
-            _sprite.color = _canGo ? _goColor : _stopColor;
+            spriteRenderer.sprite = _canGo ? sprite2 : sprite1;
         }
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
@@ -42,17 +42,6 @@ namespace Gmtk2025.Connectors
             {
                 PlacedLoop toLoop = currentLoop == _loopA ? _loopB : _loopA;
                 projectile.SwapBetweenLoops(currentLoop, toLoop);
-
-                // Swap Sprites
-                if (isSprite1Active)
-                {
-                    spriteRenderer.sprite = sprite2;
-                    isSprite1Active = false;
-                } else
-                {
-                    spriteRenderer.sprite = sprite1;
-                    isSprite1Active = true;
-                }
             }
 
             _canGo = !_canGo;
