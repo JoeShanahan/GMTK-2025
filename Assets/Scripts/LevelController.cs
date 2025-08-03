@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Gmtk2025
@@ -15,7 +16,9 @@ namespace Gmtk2025
     
     public class LevelController : MonoBehaviour
     {
-        [SerializeField] private LevelData _currentLevel;
+        public static LevelData CurrentLevel;
+        
+        [SerializeField] private LevelData _defaultLevel;
         [SerializeField] private PrefabFactory _prefabs;
         
         [Space(16)]
@@ -107,7 +110,7 @@ namespace Gmtk2025
         void Start()
         {
             Application.targetFrameRate = 60;
-            SpawnLevel(_currentLevel);
+            SpawnLevel(CurrentLevel ? CurrentLevel : _defaultLevel);
             
             foreach (Projectile proj in _projectiles)
             {
@@ -149,6 +152,7 @@ namespace Gmtk2025
             var tempLevel = ScriptableObject.CreateInstance<LevelData>();
             
             tempLevel.Projectiles = new List<LevelData.ProjectileData>();
+            tempLevel.Scoring = new List<LevelData.ProjectileData>();
 
             foreach (Projectile proj in _projectiles)
             {
@@ -156,6 +160,15 @@ namespace Gmtk2025
                 {
                     Flags = proj.Flags,
                     Pos = proj.transform.localPosition
+                });
+            }
+            
+            foreach (Scoring sc in _scoring)
+            {
+                tempLevel.Scoring.Add(new LevelData.ProjectileData()
+                {
+                    Flags = sc.Flags,
+                    Pos = sc.transform.localPosition
                 });
             }
 
@@ -214,6 +227,11 @@ namespace Gmtk2025
             _isPlayingSolution = true;
         }
 
+        public void IncreaseScore(int amount)
+        {
+            
+        }
+
         private void ClearEverything()
         {
             foreach (Projectile proj in _projectiles)
@@ -225,11 +243,15 @@ namespace Gmtk2025
             foreach (Connector conn in _connectors)
                 Destroy(conn.gameObject);
             
+            foreach (Scoring sc in _scoring)
+                Destroy(sc.gameObject);
+            
             _projectiles.Clear();
             _loops.Clear();
             _connectors.Clear();
             _connectorInventory.Clear();
             _loopInventory.Clear();
+            _scoring.Clear();
         }
 
         public void RemovePlaceable(Placeable p)
@@ -301,7 +323,7 @@ namespace Gmtk2025
         public void HardReset(LevelData newLevel=null)
         {
             if (newLevel == null)
-                newLevel = _currentLevel;
+                newLevel = CurrentLevel ? CurrentLevel : _defaultLevel;
             
             ClearEverything();
             SpawnLevel(newLevel);
@@ -359,6 +381,14 @@ namespace Gmtk2025
                 newProjectile.transform.localPosition = new Vector3(projData.Pos.x, projData.Pos.y, PROJ_DISTANCE);
                 newProjectile.Flags = projData.Flags;
                 _projectiles.Add(newProjectile);
+            }
+            
+            foreach (var projData in level.Scoring)
+            {
+                Scoring newScoring = Instantiate(_prefabs.GetScoring(), transform).GetComponent<Scoring>();
+                newScoring.transform.localPosition = new Vector3(projData.Pos.x, projData.Pos.y, PROJ_DISTANCE);
+                newScoring.Flags = projData.Flags;
+                _scoring.Add(newScoring);
             }
             
             foreach (var loopData in level.Loops)

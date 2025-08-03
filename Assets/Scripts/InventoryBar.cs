@@ -4,14 +4,14 @@ namespace Gmtk2025
 {
     public class InventoryBar : MonoBehaviour
     {
-        private InventoryPickerButton[] _allButtons;
+        private InventoryPickerButtonBase[] _allButtons;
 
         private void Start()
         {
-            _allButtons = GetComponentsInChildren<InventoryPickerButton>();
+            _allButtons = GetComponentsInChildren<InventoryPickerButtonBase>();
         }
         
-        public void OnSelectButton(InventoryPickerButton btn)
+        public void OnSelectButton(InventoryPickerButtonBase btn)
         {
             foreach (var childButton in _allButtons)
             {

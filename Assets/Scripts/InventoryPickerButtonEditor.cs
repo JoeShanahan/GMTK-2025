@@ -3,13 +3,10 @@ using UnityEngine;
 
 namespace Gmtk2025
 {
-    public class InventoryPickerButton : MonoBehaviour
+    public class InventoryPickerButtonEditor : InventoryPickerButtonBase
     {
         private enum PickType { Loop, Connector, Projectile, Scoring, Delete };
 
-        [SerializeField] private RectTransform _moverRect;
-        [SerializeField] private LevelCreator _levelCreator;
-        [SerializeField] private InventoryBar _parentBar;
         [SerializeField] private PickType _buttonType;
         
         [Header("Loop")] 
@@ -19,9 +16,8 @@ namespace Gmtk2025
         [SerializeField] private ConnectorType _connectorType;
         [SerializeField] private int _connectorValue;
 
-        private bool _isSelected;
         
-        public void ButtonPress()
+        public override void ButtonPress()
         {
             if (_isSelected)
             {
@@ -53,7 +49,7 @@ namespace Gmtk2025
             
         }
 
-        public void Deselect()
+        public override void Deselect()
         {
             if (_isSelected == false)
                 return;
@@ -72,7 +68,7 @@ namespace Gmtk2025
             }
         }
 
-        public void Select()
+        public override void Select()
         {
             if (_isSelected)
                 return;

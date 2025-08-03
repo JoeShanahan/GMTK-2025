@@ -44,6 +44,7 @@ namespace Gmtk2025
 
         public string Filename;
         public List<ProjectileData> Projectiles = new();
+        public List<ProjectileData> Scoring = new();
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();
 
