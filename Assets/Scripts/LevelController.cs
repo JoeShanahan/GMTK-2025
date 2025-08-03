@@ -124,7 +124,7 @@ namespace Gmtk2025
                 FindFirstObjectByType<CameraLevelFramer>().SnapFrameLevel();
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-                _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+                _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             }
             else
             {
@@ -177,7 +177,7 @@ namespace Gmtk2025
             }
 
             p.SetAsPlayerPlaced();
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
 
             if (_gameEditUI != null)
                 FindFirstObjectByType<CameraLevelFramer>().FramePressed();
@@ -340,7 +340,7 @@ namespace Gmtk2025
             SpawnLevel(prev);
             _currentLevel.LoopInventory = prev.LoopInventory;
             _currentLevel.ConnectorInventory = prev.ConnectorInventory;
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
 
             foreach (Projectile proj in _projectiles)
             {
@@ -380,7 +380,7 @@ namespace Gmtk2025
             ClearEverything();
             SpawnLevel(newLevel, true);
             _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             
             foreach (Projectile proj in _projectiles)
             {
