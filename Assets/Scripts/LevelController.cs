@@ -43,8 +43,12 @@ namespace Gmtk2025
         private const float PROJ_DISTANCE = -0.2f;
 
         private bool _isPlayingSolution;
+        [SerializeField]
         private LevelData _tempLevel;
 
+        [SerializeField]
+        private bool _isEditMode;
+        
         private List<LevelData> _undoHistory = new();
 
         public Rect GetLevelBounds()
@@ -469,7 +473,7 @@ namespace Gmtk2025
             
             foreach (var loopData in level.Loops)
             {
-                if (isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
+                if (!_isEditMode && isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
                     _currentLevel.LoopInventory.Add(loopData.Radius);
                 }
@@ -485,7 +489,7 @@ namespace Gmtk2025
             
             foreach (var connData in level.Connectors)
             {
-                if (isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
+                if (!_isEditMode && isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
                     _currentLevel.ConnectorInventory.Add(new ConnectorItem
                     {

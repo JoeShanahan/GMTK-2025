@@ -594,6 +594,8 @@ MonoBehaviour:
   _buttonText: {fileID: 358174859}
   _levelEditUI: {fileID: 823402156}
   _gameEditUI: {fileID: 0}
+  _tempLevel: {fileID: 0}
+  _isEditMode: 1
 --- !u!4 &100686927
 Transform:
   m_ObjectHideFlags: 0
