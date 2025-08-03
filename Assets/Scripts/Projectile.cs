@@ -194,7 +194,7 @@ namespace Gmtk2025
             float sign = _speed > 0 ? 1 : - 1;
 
             float percentAlignedDown = Vector2.Dot(currentNormal, Vector2.down);
-            float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign;
+            float speedChange = -Physics2D.gravity.y * Time.deltaTime * percentAlignedDown * sign * _rb.gravityScale;
             _speed += speedChange;
 
         }
