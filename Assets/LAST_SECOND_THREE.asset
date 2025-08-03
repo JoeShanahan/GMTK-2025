@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efd16c5569d384e148bc9c4fac868cb6, type: 3}
-  m_Name: level_three
+  m_Name: LAST_SECOND_THREE
   m_EditorClassIdentifier: 
   Filename: three
   Projectiles:
-  - Flags: 2
+  - Flags: 0
     Pos: {x: -0.25, y: 4.75}
-  - Flags: 2
+  - Flags: 0
     Pos: {x: -0.25, y: 5.75}
   Scoring:
   - Flags: 2
@@ -24,13 +24,13 @@ MonoBehaviour:
   - Flags: 2
     Pos: {x: -4.25, y: -2.75}
   Loops:
-  - Flags: 2
+  - Flags: 1
     Radius: 2
     Pos: {x: -1.5, y: 1.5}
   - Flags: 2
     Radius: 1
     Pos: {x: -1.5000002, y: -1.5}
-  - Flags: 2
+  - Flags: 1
     Radius: 1
     Pos: {x: -4.5, y: 1.5}
   Connectors:
@@ -43,7 +43,7 @@ MonoBehaviour:
     Value: 0
     Pos: {x: -1.5000002, y: -2.5}
   - Type: 1
-    Flags: 2
+    Flags: -1
     Value: 0
     Pos: {x: -3.5, y: 1.5000001}
   - Type: 2
