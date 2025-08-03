@@ -42,21 +42,29 @@ namespace Gmtk2025
             public Vector2 Pos;
         }
 
+        [Serializable]
+        public class ScoringData
+        {
+            public LevelDataFlags Flags;
+            public Vector2 Pos;
+        }
+
         public string Filename;
         public List<ProjectileData> Projectiles = new();
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();
+        public List<ScoringData> Scoring = new();
 
         public string ToBase64()
         {
             byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(this));
-            
+
             using var output = new MemoryStream();
             using (var gzip = new GZipStream(output, CompressionMode.Compress))
             {
                 gzip.Write(bytes, 0, bytes.Length);
             }
-            
+
             return Convert.ToBase64String(output.ToArray());
         }
 

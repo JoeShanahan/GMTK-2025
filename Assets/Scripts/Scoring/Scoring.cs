@@ -4,23 +4,31 @@ namespace Gmtk2025
 {
     public class Scoring : Placeable
     {
-        [SerializeField] private SpriteRenderer _ghostSprite;
+        //[SerializeField] private SpriteRenderer _ghostSprite;
         [SerializeField] private Transform _realVisuals;
 
         private bool _isGhost;
 
+        private static SpriteRenderer spriteRend;
+
         [SerializeField] private bool canPlace = true;
+
+        void Start()
+        {
+            spriteRend = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
+            ScoringSystem.Instance.IncreaseTotal();
+        }
 
         public override void SetAsGhost(float value)
         {
-            _ghostSprite.gameObject.SetActive(true);
-            _realVisuals.gameObject.SetActive(false);
+            //_ghostSprite.gameObject.SetActive(true);
+            _realVisuals.gameObject.SetActive(true);
             _isGhost = true;
         }
 
         public override void StopBeingAGhost()
         {
-            _ghostSprite.gameObject.SetActive(false);
+            //_ghostSprite.gameObject.SetActive(false);
             _realVisuals.gameObject.SetActive(true);
             _isGhost = false;
         }
@@ -34,20 +42,19 @@ namespace Gmtk2025
             transform.position = worldPos;
         }
 
-        // scoring methods
-        // check if object with Projectile tag passes through this gameobject
-        // remove gameobject if so
-        // add 1 to score
-
         public void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Projectile"))
             {
-                ScoringSystem.IncreaseScore(1); // can be changed then to accomodate different scores per pick-up but for now each one is just 1
+                ScoringSystem.Instance.IncreaseScore(1); // can be changed then to accomodate different scores per pick-up but for now each one is just 1
 
-                Destroy(gameObject);
+                spriteRend.enabled = false;
             }
         }
 
+        public static void ReEnable()
+        {
+            spriteRend.enabled = true;
+        }
     }
 }

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Projectile
+  - ScoreItem
   layers:
   - Default
   - TransparentFX

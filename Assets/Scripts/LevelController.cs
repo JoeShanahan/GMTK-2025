@@ -33,6 +33,7 @@ namespace Gmtk2025
         private const float LOOP_DISTANCE = 0;
         private const float CONN_DISTANCE = -0.1f;
         private const float PROJ_DISTANCE = -0.2f;
+        private const float SCOR_DISTANCE = 0;
 
         private bool _isPlayingSolution;
         private LevelData _tempLevel;
@@ -73,7 +74,6 @@ namespace Gmtk2025
             else if (p is Scoring scor)
             {
                 _scoring.Add(scor);
-                Debug.Log("Adding scoring item to scene");
             }
 
             p.SetAsPlayerPlaced();
@@ -114,6 +114,16 @@ namespace Gmtk2025
                     Type = conn.Type
                 });
             }
+
+            foreach (Scoring scor in _scoring)
+            {
+                tempLevel.Scoring.Add(new LevelData.ScoringData()
+                {
+                    Flags = scor.Flags,
+                    Pos = scor.transform.localPosition
+                });
+            }
+
             
             return tempLevel;
         }
@@ -208,6 +218,8 @@ namespace Gmtk2025
             ClearEverything();
             
             SpawnLevel(_tempLevel);
+
+            Scoring.ReEnable();
             
             foreach (Projectile proj in _projectiles)
             {
@@ -269,6 +281,14 @@ namespace Gmtk2025
                 newConnector.Flags = connData.Flags;
                 newConnector.transform.localPosition = new Vector3(connData.Pos.x, connData.Pos.y, CONN_DISTANCE);
                 _connectors.Add(newConnector);
+            }
+
+            foreach (var scorData in level.Scoring)
+            {
+                Scoring newScoring = Instantiate(_prefabs.GetScoring(), transform).GetComponent<Scoring>();
+                newScoring.transform.localPosition = new Vector3(scorData.Pos.x, scorData.Pos.y, SCOR_DISTANCE);
+                newScoring.Flags = scorData.Flags;
+                _scoring.Add(newScoring);
             }
             
             RefreshAllConnections();

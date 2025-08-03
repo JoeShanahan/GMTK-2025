@@ -200,12 +200,8 @@ namespace Gmtk2025
 
         public void StartPlacingScoring()
         {
-            Debug.Log("Trying to place scoring item");
             if (_currentGhost != null)
-            {
-                Debug.Log("Trying to destroy ghost");
                 Destroy(_currentGhost.gameObject);
-            }
 
             GameObject newObj = Instantiate(_prefabs.GetScoring());
             Scoring newScoring = newObj.GetComponent<Scoring>();
