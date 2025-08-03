@@ -17,3 +17,5 @@ https://skylarkblue1.itch.io/windswept
 * **Better Inventory Descriptions** - they're just the enum names right now
 * **Removing things in play mode** - you can only undo right now
 * **Proper menu** - with Hard Reset and main menu
+* **Stop loops overlapping in editor**
+* **Don't deselect when using in editor**
