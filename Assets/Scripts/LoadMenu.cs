@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,6 +11,7 @@ namespace Gmtk2025
     public class LoadMenu : MonoBehaviour
     {
         [SerializeField] private InputField _codeOutput;
+        [SerializeField] private InputField _codeInput;
         [SerializeField] private RectTransform _listParent;
         [SerializeField] private GameObject _listItemTemplate;
         [SerializeField] private string _selectedFilename;
@@ -83,6 +85,26 @@ namespace Gmtk2025
             }
             
             Close();
+        }
+
+        public void ButtonPressImportCustomLevel()
+        {
+            try
+            {
+                
+                string b64Level = _codeInput.text;
+
+                var lvl = ScriptableObject.CreateInstance<LevelData>();
+                lvl.FromBase64Overwrite(b64Level);
+                FindFirstObjectByType<LevelController>().HardReset(lvl);
+                Close();
+
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            
         }
 
         public void ButtonPressExport()

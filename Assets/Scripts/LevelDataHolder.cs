@@ -13,6 +13,19 @@ namespace Gmtk2025
         public int SelectedLevelIdx;
         public LevelData[] AllLevels;
 
-        public LevelData CurrentLevel => AllLevels[SelectedLevelIdx];
+        public LevelData CurrentLevel
+        {
+            get
+            {
+                try
+                {
+                    return AllLevels [SelectedLevelIdx];
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

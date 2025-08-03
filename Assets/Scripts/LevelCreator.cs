@@ -118,6 +118,19 @@ namespace Gmtk2025
                     var thing = hit.collider.GetComponent<Placeable>();
                     _levelController.RemovePlaceable(thing);
                 }
+                else
+                {
+                    Vector2 pos = _mainCamera.ScreenToWorldPoint(mpos);
+
+                    foreach (Projectile proj in _levelController.AllProjectiles)
+                    {
+                        if (Vector2.Distance(proj.transform.position, pos) < 1)
+                        {
+                            _levelController.RemovePlaceable(proj);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
