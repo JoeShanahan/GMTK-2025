@@ -38,6 +38,11 @@ namespace Gmtk2025.Connectors
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
+            if (_loopA == null || _loopB == null)
+            {
+                return;
+            }
+            
             if (_canGo)
             {
                 PlacedLoop toLoop = currentLoop == _loopA ? _loopB : _loopA;
