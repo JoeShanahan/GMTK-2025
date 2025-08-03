@@ -120,6 +120,7 @@ namespace Gmtk2025
                 {
                     proj.Freeze();
                 }
+                
                 FindFirstObjectByType<CameraLevelFramer>().SnapFrameLevel();
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
@@ -177,7 +178,7 @@ namespace Gmtk2025
 
             p.SetAsPlayerPlaced();
             _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
-            
+
             if (_gameEditUI != null)
                 FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
