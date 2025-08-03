@@ -35,6 +35,8 @@ namespace Gmtk2025
         [SerializeField] private LevelEditorUI _levelEditUI;
     
         private List<GameObject> _riderFlags = new();
+        private int _neededScore;
+        private int _currentScore;
 
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
@@ -110,7 +112,7 @@ namespace Gmtk2025
         void Start()
         {
             Application.targetFrameRate = 60;
-            SpawnLevel(CurrentLevel ? CurrentLevel : _defaultLevel);
+            SpawnLevel(CurrentLevel ? CurrentLevel : _defaultLevel, true);
             
             foreach (Projectile proj in _projectiles)
             {
@@ -234,6 +236,8 @@ namespace Gmtk2025
 
         private void ClearEverything()
         {
+            _currentScore = 0;
+            
             foreach (Projectile proj in _projectiles)
                 Destroy(proj.gameObject);
             
@@ -326,7 +330,7 @@ namespace Gmtk2025
                 newLevel = CurrentLevel ? CurrentLevel : _defaultLevel;
             
             ClearEverything();
-            SpawnLevel(newLevel);
+            SpawnLevel(newLevel, true);
             
             foreach (Projectile proj in _projectiles)
             {
@@ -373,14 +377,23 @@ namespace Gmtk2025
                 _undoHistory.RemoveAt(0);
         }
 
-        private void SpawnLevel(LevelData level)
+        private void SpawnLevel(LevelData level, bool isHardReset=false)
         {
+            if (isHardReset)
+            {
+                _loopInventory.Clear();
+                _connectorInventory.Clear();
+                _neededScore = 0;
+            }
+            
             foreach (var projData in level.Projectiles)
             {
-                Projectile newProjectile = Instantiate(_prefabs.GetProjectile(), transform).GetComponent<Projectile>();
+                Projectile newProjectile =
+                    Instantiate(_prefabs.GetProjectile(), transform).GetComponent<Projectile>();
                 newProjectile.transform.localPosition = new Vector3(projData.Pos.x, projData.Pos.y, PROJ_DISTANCE);
                 newProjectile.Flags = projData.Flags;
                 _projectiles.Add(newProjectile);
+
             }
             
             foreach (var projData in level.Scoring)
@@ -389,24 +402,44 @@ namespace Gmtk2025
                 newScoring.transform.localPosition = new Vector3(projData.Pos.x, projData.Pos.y, PROJ_DISTANCE);
                 newScoring.Flags = projData.Flags;
                 _scoring.Add(newScoring);
+                _neededScore++;
             }
             
             foreach (var loopData in level.Loops)
             {
-                PlacedLoop newLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
-                newLoop.Init(loopData.Radius);
-                newLoop.transform.localPosition = new Vector3(loopData.Pos.x, loopData.Pos.y, LOOP_DISTANCE);
-                newLoop.Flags = loopData.Flags;
-                _loops.Add(newLoop);
+                if (isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
+                {
+                    _loopInventory.Add(loopData.Radius);
+                }
+                else
+                {
+                    PlacedLoop newLoop = Instantiate(_prefabs.GetLoop(), transform).GetComponent<PlacedLoop>();
+                    newLoop.Init(loopData.Radius);
+                    newLoop.transform.localPosition = new Vector3(loopData.Pos.x, loopData.Pos.y, LOOP_DISTANCE);
+                    newLoop.Flags = loopData.Flags;
+                    _loops.Add(newLoop);
+                }
             }
             
             foreach (var connData in level.Connectors)
             {
-                Connector newConnector = Instantiate(_prefabs.GetConnector(connData.Type), transform).GetComponent<Connector>();
-                newConnector.SetParameter(connData.Value);
-                newConnector.Flags = connData.Flags;
-                newConnector.transform.localPosition = new Vector3(connData.Pos.x, connData.Pos.y, CONN_DISTANCE);
-                _connectors.Add(newConnector);
+                if (isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
+                {
+                    _connectorInventory.Add(new ConnectorItem
+                    {
+                        Type = connData.Type,
+                        Value = connData.Value
+                    });
+                }
+                else
+                {
+                    Connector newConnector = Instantiate(_prefabs.GetConnector(connData.Type), transform)
+                        .GetComponent<Connector>();
+                    newConnector.SetParameter(connData.Value);
+                    newConnector.Flags = connData.Flags;
+                    newConnector.transform.localPosition = new Vector3(connData.Pos.x, connData.Pos.y, CONN_DISTANCE);
+                    _connectors.Add(newConnector);
+                }
             }
             
             RefreshAllConnections();
