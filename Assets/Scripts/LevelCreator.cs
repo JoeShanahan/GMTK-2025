@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Gmtk2025
@@ -70,8 +72,34 @@ namespace Gmtk2025
             _saveData.LoadFromPrefs();
         }
         
-        private void OnMousePress(InputAction.CallbackContext context) 
+        private bool IsPointerOverUIObject() 
         {
+            Vector2 mpos = _mousePositionAction.action.ReadValue<Vector2>();
+
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+            eventDataCurrentPosition.position = new Vector2(mpos.x, mpos.y);
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+            return results.Count > 0;
+        }
+
+        public void StopPlacing()
+        {
+            if (_currentGhost != null)
+            {
+                Destroy(_currentGhost.gameObject);
+                _currentGhost = null;
+            }
+        }
+
+        
+        private void OnMousePress(InputAction.CallbackContext context)
+        {
+            if (IsPointerOverUIObject())
+                return;
+            
             if (_currentGhost != null && _currentGhost.CanPlace)
             {
                 _currentGhost.StopBeingAGhost();

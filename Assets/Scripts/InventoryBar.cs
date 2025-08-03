@@ -15,15 +15,13 @@ namespace Gmtk2025
         {
             foreach (var childButton in _allButtons)
             {
-                if (childButton == btn)
-                {
-                    childButton.Select();
-                }
-                else
+                if (childButton != btn)
                 {
                     childButton.Deselect();
                 }
             }
+            
+            btn?.Select();
         }
     }
 }

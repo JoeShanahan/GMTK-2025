@@ -28,6 +28,7 @@ namespace Gmtk2025
                 Deselect();
                 return;
             }
+            _parentBar.OnSelectButton(this);
 
             if (_buttonType == PickType.Loop)
             {
@@ -50,7 +51,6 @@ namespace Gmtk2025
                 _levelCreator.StartPlacingScoring();
             }
             
-            _parentBar.OnSelectButton(this);
         }
 
         public void Deselect()
@@ -65,6 +65,10 @@ namespace Gmtk2025
             if (_buttonType == PickType.Delete)
             {
                 _levelCreator.StopDeleting();
+            }
+            else
+            {
+                _levelCreator.StopPlacing();
             }
         }
 

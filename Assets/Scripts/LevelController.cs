@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gmtk2025
 {
@@ -26,7 +27,10 @@ namespace Gmtk2025
         [Space(16)] 
         [SerializeField] private List<float> _loopInventory;
         [SerializeField] private List<ConnectorItem> _connectorInventory;
+        [SerializeField] private Text _buttonText;
 
+        [SerializeField] private LevelEditorUI _levelEditUI;
+    
         private List<GameObject> _riderFlags = new();
 
         public IEnumerable<Connector> AllConnectors => _connectors;
@@ -40,6 +44,65 @@ namespace Gmtk2025
         private LevelData _tempLevel;
 
         private List<LevelData> _undoHistory = new();
+
+        public Rect GetLevelBounds()
+        {
+            float minX = 999999;
+            float minY = 999999;
+            float maxX = -999999;
+            float maxY = -999999;
+    
+            foreach (PlacedLoop loop in _loops)
+            {
+                Vector2 pos = loop.transform.position;
+                float r = loop.Radius;
+
+                minX = Mathf.Min(minX, pos.x - r);
+                maxX = Mathf.Max(maxX, pos.x + r);
+                minY = Mathf.Min(minY, pos.y - r);
+                maxY = Mathf.Max(maxY, pos.y + r);
+            }
+
+            foreach (Connector conn in _connectors)
+            {
+                Vector2 pos = conn.transform.position;
+                float r = 1f;
+
+                minX = Mathf.Min(minX, pos.x - r);
+                maxX = Mathf.Max(maxX, pos.x + r);
+                minY = Mathf.Min(minY, pos.y - r);
+                maxY = Mathf.Max(maxY, pos.y + r);
+            }
+            
+            foreach (Projectile proj in _projectiles)
+            {
+                Vector2 pos = proj.transform.position;
+                float r = 1f;
+
+                minX = Mathf.Min(minX, pos.x - r);
+                maxX = Mathf.Max(maxX, pos.x + r);
+                minY = Mathf.Min(minY, pos.y - r);
+                maxY = Mathf.Max(maxY, pos.y + r);
+            }
+            
+            foreach (Scoring s in _scoring)
+            {
+                Vector2 pos = s.transform.position;
+                float r = 1f;
+
+                minX = Mathf.Min(minX, pos.x - r);
+                maxX = Mathf.Max(maxX, pos.x + r);
+                minY = Mathf.Min(minY, pos.y - r);
+                maxY = Mathf.Max(maxY, pos.y + r);
+            }
+
+            if (minX > 99999)
+            {
+                return new Rect(-1, -1, 2, 2);
+            }
+
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
+        }
         
         void Start()
         {
@@ -120,11 +183,27 @@ namespace Gmtk2025
             return tempLevel;
         }
 
+        public void PlayButtonPressed()
+        {
+            if (_isPlayingSolution)
+            {
+                _levelEditUI?.OnStopPlaying();
+                SoftReset();
+                _buttonText.text = "Play";
+            }
+            else
+            {
+                _levelEditUI?.OnStartPlaying();
+                StartPlayerSolution();
+                _buttonText.text = "Stop";
+            }
+        }
+
         public void StartPlayerSolution()
         {
             if (_isPlayingSolution)
                 return;
-            
+
             _tempLevel = ConvertScreenToLevelData();
             
             foreach (Projectile proj in _projectiles)
