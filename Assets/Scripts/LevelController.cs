@@ -35,6 +35,7 @@ namespace Gmtk2025
         private int _neededScore;
         private int _currentScore;
 
+        public IEnumerable<Projectile> AllProjectiles => _projectiles;
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
         
