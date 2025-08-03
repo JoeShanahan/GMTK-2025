@@ -9,7 +9,8 @@ namespace Gmtk2025
         // Positive = clockwise
         [SerializeField]
         private float _speed;
-        
+
+        [SerializeField] private Animator _animator;
         [SerializeField] private SpriteRenderer _ghostSprite;
         [SerializeField] private Transform _realVisuals;
         
@@ -96,6 +97,7 @@ namespace Gmtk2025
             
             _rb.simulated = false;
             _currentLoop = loop;
+            _animator.SetBool("IsOnLoop", true);
 
             float loopSpace = loop.PositionToLoopSpace(transform.position);
             Vector3 newPos = loop.LoopSpaceToPosition(loopSpace);
@@ -114,6 +116,7 @@ namespace Gmtk2025
             Vector3 previousVelocity = GetVelocity();
             
             _currentLoop = otherLoop;
+            _animator.SetBool("IsOnLoop", true);
             transform.position = position;
 
             Vector3 newTangent = _currentLoop.GetTangent(position);
@@ -127,6 +130,7 @@ namespace Gmtk2025
             _speed *= -1;
             
             _currentLoop = toLoop;
+            _animator.SetBool("IsOnLoop", true);
 
             float loopSpace = toLoop.PositionToLoopSpace(transform.position);
             Vector3 newPos = toLoop.LoopSpaceToPosition(loopSpace);
@@ -140,6 +144,7 @@ namespace Gmtk2025
             _rb.linearVelocity = GetVelocity();
             
             _currentLoop = null;
+            _animator.SetBool("IsOnLoop", false);
         }
 
         private void OnTriggerStay2D(Collider2D other)
