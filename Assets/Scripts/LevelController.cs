@@ -40,7 +40,7 @@ namespace Gmtk2025
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
         
-        private const float LOOP_DISTANCE = 0;
+        private const float LOOP_DISTANCE = 5;
         private const float CONN_DISTANCE = -0.1f;
         private const float PROJ_DISTANCE = -0.2f;
 
@@ -124,6 +124,7 @@ namespace Gmtk2025
                 }
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
+                _gameEditUI.SetInventory(_loopInventory, _connectorInventory);
             }
             else
             {
@@ -247,13 +248,8 @@ namespace Gmtk2025
 
             if (_currentScore >= _neededScore)
             {
-                OnLevelWin();
+                _gameEditUI?.OnLevelComplete();
             }
-        }
-
-        private void OnLevelWin()
-        {
-            Debug.Log("YOU WIN");
         }
 
         private void ClearEverything()
@@ -275,8 +271,6 @@ namespace Gmtk2025
             _projectiles.Clear();
             _loops.Clear();
             _connectors.Clear();
-            _connectorInventory.Clear();
-            _loopInventory.Clear();
             _scoring.Clear();
         }
 
@@ -355,7 +349,8 @@ namespace Gmtk2025
             ClearEverything();
             SpawnLevel(newLevel, true);
             _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-
+            _gameEditUI.SetInventory(_loopInventory, _connectorInventory);
+            
             foreach (Projectile proj in _projectiles)
             {
                 proj.Freeze();
