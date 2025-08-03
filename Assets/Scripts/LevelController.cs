@@ -144,11 +144,29 @@ namespace Gmtk2025
             {
                 _loops.Add(loop);
                 RefreshAllConnections();
+
+                foreach (float f in _currentLevel.LoopInventory)
+                {
+                    if (Mathf.Approximately(f, loop.Radius))
+                    {
+                        _currentLevel.LoopInventory.Remove(f);
+                        break;
+                    }
+                }
             }
             else if (p is Connector conn)
             {
                 _connectors.Add(conn);
                 RefreshAllConnections();
+                
+                foreach (var ci in _currentLevel.ConnectorInventory)
+                {
+                    if (ci.Type == conn.Type && ci.Value == conn.IntValue)
+                    {
+                        _currentLevel.ConnectorInventory.Remove(ci);
+                        break;
+                    }
+                }
             }
             else if (p is Scoring scor)
             {
@@ -157,6 +175,7 @@ namespace Gmtk2025
             }
 
             p.SetAsPlayerPlaced();
+            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
         }
 
         public LevelData ConvertScreenToLevelData()
@@ -311,6 +330,9 @@ namespace Gmtk2025
             
             ClearEverything();
             SpawnLevel(prev);
+            _currentLevel.LoopInventory = prev.LoopInventory;
+            _currentLevel.ConnectorInventory = prev.ConnectorInventory;
+            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
 
             foreach (Projectile proj in _projectiles)
             {
@@ -388,6 +410,8 @@ namespace Gmtk2025
         private void AddToUndoHistory()
         {
             LevelData dat = ConvertScreenToLevelData();
+            dat.LoopInventory = new List<float>(_currentLevel.LoopInventory);
+            dat.ConnectorInventory = new List<ConnectorItem>(_currentLevel.ConnectorInventory);
             _undoHistory.Add(dat);
 
             while (_undoHistory.Count > 10)
