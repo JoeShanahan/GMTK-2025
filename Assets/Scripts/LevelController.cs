@@ -16,9 +16,7 @@ namespace Gmtk2025
     
     public class LevelController : MonoBehaviour
     {
-        public static LevelData CurrentLevel;
-        
-        [SerializeField] private LevelData _defaultLevel;
+        [SerializeField] private LevelDataHolder _levelDataHolder;
         [SerializeField] private PrefabFactory _prefabs;
         
         [Space(16)]
@@ -34,7 +32,7 @@ namespace Gmtk2025
 
         [SerializeField] private LevelEditorUI _levelEditUI;
         [SerializeField] private GameEditorUI _gameEditUI;
-    
+        
         private List<GameObject> _riderFlags = new();
         private int _neededScore;
         private int _currentScore;
@@ -109,18 +107,28 @@ namespace Gmtk2025
 
             return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
+
+        private LevelData _currentLevel;
         
         void Start()
         {
             Application.targetFrameRate = 60;
-            SpawnLevel(CurrentLevel ? CurrentLevel : _defaultLevel, true);
-            
-            foreach (Projectile proj in _projectiles)
+            if (_gameEditUI != null) // this is a dumb way to check we're in game mode rather than edit mode but oh well
             {
-                proj.Freeze();
+                _currentLevel = _levelDataHolder.CurrentLevel;
+                SpawnLevel(_currentLevel, true);
+
+                foreach (Projectile proj in _projectiles)
+                {
+                    proj.Freeze();
+                }
+
+                _gameEditUI?.UpdateScore(_currentScore, _neededScore);
             }
-            
-            _gameEditUI?.UpdateScore(_currentScore, _neededScore);
+            else
+            {
+                _currentLevel = ScriptableObject.CreateInstance<LevelData>();
+            }
         }
 
         public bool IsPlaying => _isPlayingSolution;
@@ -342,7 +350,7 @@ namespace Gmtk2025
         public void HardReset(LevelData newLevel=null)
         {
             if (newLevel == null)
-                newLevel = CurrentLevel ? CurrentLevel : _defaultLevel;
+                newLevel = _currentLevel;
             
             ClearEverything();
             SpawnLevel(newLevel, true);
