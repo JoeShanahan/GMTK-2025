@@ -26,8 +26,6 @@ namespace Gmtk2025
         [SerializeField] private List<Scoring> _scoring;
 
         [Space(16)] 
-        [SerializeField] private List<float> _loopInventory;
-        [SerializeField] private List<ConnectorItem> _connectorInventory;
         [SerializeField] private Text _buttonText;
 
         [SerializeField] private LevelEditorUI _levelEditUI;
@@ -124,7 +122,7 @@ namespace Gmtk2025
                 }
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-                _gameEditUI.SetInventory(_loopInventory, _connectorInventory);
+                _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             }
             else
             {
@@ -349,7 +347,7 @@ namespace Gmtk2025
             ClearEverything();
             SpawnLevel(newLevel, true);
             _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-            _gameEditUI.SetInventory(_loopInventory, _connectorInventory);
+            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             
             foreach (Projectile proj in _projectiles)
             {
@@ -402,8 +400,8 @@ namespace Gmtk2025
             
             if (isHardReset)
             {
-                _loopInventory.Clear();
-                _connectorInventory.Clear();
+                _currentLevel.LoopInventory.Clear();
+                _currentLevel.ConnectorInventory.Clear();
             }
             
             foreach (var projData in level.Projectiles)
@@ -429,7 +427,7 @@ namespace Gmtk2025
             {
                 if (isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
-                    _loopInventory.Add(loopData.Radius);
+                    _currentLevel.LoopInventory.Add(loopData.Radius);
                 }
                 else
                 {
@@ -445,7 +443,7 @@ namespace Gmtk2025
             {
                 if (isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
-                    _connectorInventory.Add(new ConnectorItem
+                    _currentLevel.ConnectorInventory.Add(new ConnectorItem
                     {
                         Type = connData.Type,
                         Value = connData.Value

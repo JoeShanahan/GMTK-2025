@@ -48,6 +48,10 @@ namespace Gmtk2025
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();
 
+        [NonSerialized] public List<float> LoopInventory = new();
+
+        [NonSerialized] public List<ConnectorItem> ConnectorInventory = new();
+        
         public string ToBase64()
         {
             byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(this));
