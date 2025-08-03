@@ -139,12 +139,16 @@ namespace Gmtk2025
         {
             AddToUndoHistory();
 
+            Vector3 position = p.transform.position;
+            
             if (p is Projectile proj)
             {
+                position.z = PROJ_DISTANCE;
                 _projectiles.Add(proj);
             }
             else if (p is PlacedLoop loop)
             {
+                position.z = LOOP_DISTANCE;
                 _loops.Add(loop);
                 RefreshAllConnections();
 
@@ -159,6 +163,7 @@ namespace Gmtk2025
             }
             else if (p is Connector conn)
             {
+                position.z = CONN_DISTANCE;
                 _connectors.Add(conn);
                 RefreshAllConnections();
                 
@@ -173,10 +178,13 @@ namespace Gmtk2025
             }
             else if (p is Scoring scor)
             {
+                position.z = CONN_DISTANCE;
                 _scoring.Add(scor);
                 Debug.Log("Adding scoring item to scene");
             }
 
+            p.transform.position = position;
+            
             p.SetAsPlayerPlaced();
             _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
 
