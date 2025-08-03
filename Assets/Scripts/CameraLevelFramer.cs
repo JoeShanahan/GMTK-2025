@@ -34,14 +34,13 @@ namespace Gmtk2025
             _cam.transform.position = center;
             
             DOTween.Kill(_cam);
-            _cam.orthographicSize = Mathf.Max(5, levelRect.height + 4);
+            _cam.orthographicSize = Mathf.Max(5, (levelRect.height / 2) + 3);
         }
 
         public void FramePressed()
         {
             Rect levelRect = _level.GetLevelBounds();
             
-            /*
             Vector3 tl = new Vector3(levelRect.x, levelRect.y, 0);
             Vector3 tr = new Vector3(levelRect.x + levelRect.width, levelRect.y);
             Vector3 bl = new Vector3(levelRect.x, levelRect.y + levelRect.height, 0);
@@ -51,7 +50,8 @@ namespace Gmtk2025
             Debug.DrawLine(bl, br, Color.red, 5);
             Debug.DrawLine(bl, tl, Color.red, 5);
             Debug.DrawLine(tr, br, Color.red, 5);
-            */
+            
+            Debug.Log(levelRect.height);
             
             Vector3 center = levelRect.center;
             center.z = _cam.transform.position.z;
@@ -60,7 +60,7 @@ namespace Gmtk2025
             _cam.transform.DOMove(center, 1f).SetEase(Ease.OutExpo);
             
             DOTween.Kill(_cam);
-            float orthoSize = Mathf.Max(5, levelRect.height + 4);
+            float orthoSize = Mathf.Max(5, (levelRect.height / 2) + 3);
             _cam.DOOrthoSize(orthoSize, 1f).SetEase(Ease.OutExpo);
         }
     }

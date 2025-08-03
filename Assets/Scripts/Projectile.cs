@@ -16,6 +16,9 @@ namespace Gmtk2025
         [SerializeField] private Color _invalidColor = new Color(1,0, 0, 0.7f);
         [SerializeField] private Color _validColor = new Color(0,1, 0, 0.9f);
 
+
+        [SerializeField] private Transform _ball;
+        [SerializeField] private Transform _float;
         
         private PlacedLoop _currentLoop;
         private Rigidbody2D _rb;
@@ -168,6 +171,9 @@ namespace Gmtk2025
 
         private void Update()
         {
+            _float.gameObject.SetActive(!IsOnLoop);
+            _ball.gameObject.SetActive(IsOnLoop);
+            
             if (_isGhost)
                 return;
             

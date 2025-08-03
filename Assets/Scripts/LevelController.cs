@@ -120,6 +120,8 @@ namespace Gmtk2025
                 {
                     proj.Freeze();
                 }
+                
+                FindFirstObjectByType<CameraLevelFramer>().SnapFrameLevel();
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
                 _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
@@ -176,6 +178,9 @@ namespace Gmtk2025
 
             p.SetAsPlayerPlaced();
             _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public LevelData ConvertScreenToLevelData()
@@ -315,6 +320,9 @@ namespace Gmtk2025
             }
             
             Destroy(p.gameObject);
+            
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public void Undo()
@@ -338,6 +346,9 @@ namespace Gmtk2025
             {
                 proj.Freeze();
             }
+            
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public void SoftReset()
