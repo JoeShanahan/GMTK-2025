@@ -33,6 +33,7 @@ namespace Gmtk2025
         [SerializeField] private Text _buttonText;
 
         [SerializeField] private LevelEditorUI _levelEditUI;
+        [SerializeField] private GameEditorUI _gameEditUI;
     
         private List<GameObject> _riderFlags = new();
         private int _neededScore;
@@ -118,6 +119,8 @@ namespace Gmtk2025
             {
                 proj.Freeze();
             }
+            
+            _gameEditUI?.UpdateScore(_currentScore, _neededScore);
         }
 
         public bool IsPlaying => _isPlayingSolution;
@@ -231,7 +234,18 @@ namespace Gmtk2025
 
         public void IncreaseScore(int amount)
         {
-            
+            _currentScore += amount;
+            _gameEditUI?.UpdateScore(_currentScore, _neededScore);
+
+            if (_currentScore >= _neededScore)
+            {
+                OnLevelWin();
+            }
+        }
+
+        private void OnLevelWin()
+        {
+            Debug.Log("YOU WIN");
         }
 
         private void ClearEverything()
@@ -315,7 +329,8 @@ namespace Gmtk2025
             ClearEverything();
             
             SpawnLevel(_tempLevel);
-            
+            _gameEditUI?.UpdateScore(_currentScore, _neededScore);
+
             foreach (Projectile proj in _projectiles)
             {
                 proj.Freeze();
@@ -331,7 +346,8 @@ namespace Gmtk2025
             
             ClearEverything();
             SpawnLevel(newLevel, true);
-            
+            _gameEditUI?.UpdateScore(_currentScore, _neededScore);
+
             foreach (Projectile proj in _projectiles)
             {
                 proj.Freeze();
@@ -379,11 +395,12 @@ namespace Gmtk2025
 
         private void SpawnLevel(LevelData level, bool isHardReset=false)
         {
+            _neededScore = 0;
+            
             if (isHardReset)
             {
                 _loopInventory.Clear();
                 _connectorInventory.Clear();
-                _neededScore = 0;
             }
             
             foreach (var projData in level.Projectiles)
