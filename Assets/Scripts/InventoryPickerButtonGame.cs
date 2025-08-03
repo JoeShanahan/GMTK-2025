@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,7 +60,7 @@ namespace Gmtk2025
             
             _isSelected = false;
             DOTween.Kill(_moverRect);
-            _moverRect.DOAnchorPosX(0, 0.5f).SetEase(Ease.OutExpo);
+            _moverRect.DOAnchorPosX(-30, 0.5f).SetEase(Ease.OutExpo);
 
             if (_buttonType == PickType.Delete)
             {
@@ -78,7 +79,26 @@ namespace Gmtk2025
 
             _isSelected = true;
             DOTween.Kill(_moverRect);
-            _moverRect.DOAnchorPosX(-20, 0.5f).SetEase(Ease.OutExpo);
+            _moverRect.DOAnchorPosX(0, 0.5f).SetEase(Ease.OutExpo);
         }
+
+        public void SetLoop(float radius)
+        {
+            _loopRadius = radius;
+            _buttonType = PickType.Loop;
+
+            int meters = Mathf.RoundToInt(radius);
+            _text.text = $"Loop ({meters}m)";
+        }
+        
+        public void SetConnector(ConnectorType type, int value)
+        {
+            _buttonType = PickType.Connector;
+            _connectorType = type;
+            _connectorValue = value;
+            
+            _text.text = $"{type}";
+        }
+
     }
 }

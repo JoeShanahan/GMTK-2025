@@ -1,3 +1,4 @@
+using DG.Tweening;
 using LudumDare55;
 using UnityEngine;
 
@@ -6,10 +7,22 @@ namespace Gmtk2025
     public class TitleScreenManager : MonoBehaviour
     {
         [SerializeField] private RectTransform _quitButton;
+        [SerializeField] private LevelDataHolder _levelHolder;
+        [SerializeField] private CanvasGroup _levelSelectScreen;
         
         public void ButtonPressPlay()
         {
-            TransitionManager.Instance.GoToGame();
+            _levelSelectScreen.gameObject.SetActive(true);
+            _levelSelectScreen.DOFade(1, 0.6f);
+        }
+
+        public void ButtonPressPlayLevel(int idx)
+        {
+            _levelHolder.SelectedLevelIdx = idx;
+            if (_levelHolder.CurrentLevel != null)
+            {
+                TransitionManager.Instance.GoToGame();
+            }
         }
 
         public void ButtonPressEdit()
