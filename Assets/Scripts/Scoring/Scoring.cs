@@ -43,9 +43,9 @@ namespace Gmtk2025
         {
             if (other.CompareTag("Projectile"))
             {
-                ScoringSystem.IncreaseScore(1); // can be changed then to accomodate different scores per pick-up but for now each one is just 1
+                FindFirstObjectByType<LevelController>().IncreaseScore(1); // can be changed then to accomodate different scores per pick-up but for now each one is just 1
 
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
 
