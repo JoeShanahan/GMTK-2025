@@ -21,7 +21,7 @@ namespace Gmtk2025
                 {
                     return AllLevels [SelectedLevelIdx];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return null;
                 }
