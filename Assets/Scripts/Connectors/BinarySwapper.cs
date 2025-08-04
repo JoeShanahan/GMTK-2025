@@ -15,7 +15,7 @@ namespace Gmtk2025.Connectors
         public Sprite sprite2;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
-        private bool isSprite1Active = true;
+        //private bool isSprite1Active = true;
         
         public override ConnectorType Type => ConnectorType.Binary;
         public override int IntValue => _startsOn ? 1 : 0;
