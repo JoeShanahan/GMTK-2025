@@ -7,22 +7,20 @@ namespace Gmtk2025
         [SerializeField] private SpriteRenderer _ghostSprite;
         [SerializeField] private Transform _realVisuals;
 
-        private bool _isGhost;
-
-        [SerializeField] private bool canPlace = true;
+        //private bool _isGhost;
 
         public override void SetAsGhost(float value)
         {
             _ghostSprite.gameObject.SetActive(true);
             _realVisuals.gameObject.SetActive(false);
-            _isGhost = true;
+            //_isGhost = true;
         }
 
         public override void StopBeingAGhost()
         {
             _ghostSprite.gameObject.SetActive(false);
             _realVisuals.gameObject.SetActive(true);
-            _isGhost = false;
+            //_isGhost = false;
         }
 
         public override void MoveTo(Vector3 worldPos)
