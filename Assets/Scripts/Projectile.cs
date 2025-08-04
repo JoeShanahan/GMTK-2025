@@ -66,9 +66,13 @@ namespace Gmtk2025
             }
             else
             {
-                transform.position = worldPos;
-                _ghostSprite.color = _invalidColor;
-                CanPlace = false;
+                // This code was unreachable so I've commented it out to suppress the 
+                // warnings in the Unity Editor 
+                // Rob
+
+                //transform.position = worldPos;
+                //_ghostSprite.color = _invalidColor;
+                //CanPlace = false;
             }
             
             transform.position = worldPos;
