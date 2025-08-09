@@ -17,16 +17,17 @@ namespace Gmtk2025
         [SerializeField] private Color _invalidColor = new Color(1,0, 0, 0.7f);
         [SerializeField] private Color _validColor = new Color(0,1, 0, 0.9f);
 
+        [SerializeField] private Transform _animationSprite;
 
-        [SerializeField] private Transform _ball;
-        [SerializeField] private Transform _float;
+        //[SerializeField] private Transform _ball;
+        //[SerializeField] private Transform _float;
         
         private PlacedLoop _currentLoop;
         private Rigidbody2D _rb;
         private CircleCollider2D _collider;
 
         private bool _isGhost;
-        
+
         public Vector3 Velocity
         {
             get
@@ -104,7 +105,6 @@ namespace Gmtk2025
             
             _rb.simulated = false;
             _currentLoop = loop;
-            _animator.SetBool("IsOnLoop", true);
 
             float loopSpace = loop.PositionToLoopSpace(transform.position);
             Vector3 newPos = loop.LoopSpaceToPosition(loopSpace);
@@ -116,6 +116,8 @@ namespace Gmtk2025
 
             float alignment = Vector3.Dot(loopTangent, previousDirection);
             _speed = -alignment * previousVelocity.magnitude;
+
+            _animator.SetBool("IsOnLoop", true);
         }
 
         public void WarpTo(Vector3 position, PlacedLoop otherLoop)
@@ -123,15 +125,16 @@ namespace Gmtk2025
             Vector3 previousVelocity = GetVelocity();
             
             _currentLoop = otherLoop;
-            _animator.SetBool("IsOnLoop", true);
             transform.position = position;
 
             Vector3 newTangent = _currentLoop.GetTangent(position);
             Vector3 previousDirection = previousVelocity.magnitude > 0 ? previousVelocity.normalized : Vector3.down;
             float alignment = Vector3.Dot(newTangent, previousDirection);
             _speed = -alignment * previousVelocity.magnitude;
+
+            _animator.SetBool("IsOnLoop", true);
         }
-        
+
         public void SwapBetweenLoops(PlacedLoop fromLoop, PlacedLoop toLoop)
         {
             _speed *= -1;
@@ -151,6 +154,7 @@ namespace Gmtk2025
             _rb.linearVelocity = GetVelocity();
             
             _currentLoop = null;
+            _animationSprite.rotation = Quaternion.identity;
             _animator.SetBool("IsOnLoop", false);
         }
 
@@ -180,8 +184,8 @@ namespace Gmtk2025
 
         private void Update()
         {
-            _float.gameObject.SetActive(!IsOnLoop);
-            _ball.gameObject.SetActive(IsOnLoop);
+            //_float.gameObject.SetActive(!IsOnLoop);
+            //_ball.gameObject.SetActive(IsOnLoop);
             
             if (_isGhost)
                 return;
@@ -189,6 +193,7 @@ namespace Gmtk2025
             if (IsOnLoop == false)
                 return;
 
+            RotateOnLoop();
             Move(1.0f);
         }
 
@@ -257,6 +262,18 @@ namespace Gmtk2025
                 
                 Move(remainingPercent, recursionDepth + 1, connector);
             }
+        }
+
+        private void RotateOnLoop()
+        {
+            // This factor controls how many spins the character does as they go 
+            // around a loop. A value of (n * Rad2Deg) causes the character to 
+            // complete n spins per revolution of a loop
+            const float _loopRotationFactor = 1f * Mathf.Rad2Deg;
+
+            float angularSpeed = _speed / _currentLoop.Radius;
+
+            _animationSprite.rotation *= Quaternion.AngleAxis(angularSpeed * _loopRotationFactor * Time.deltaTime, Vector3.forward);
         }
     }
 }
