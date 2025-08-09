@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11da671aa998b48029bd7eaea7bb93dd, type: 3}
+  m_Name: PostjamPrefabList
+  m_EditorClassIdentifier: 
+  _loopPrefab: {fileID: 4432792192646503738, guid: 64f2cf9a56ec24e29a1ed56d4f280b63, type: 3}
+  _projectilePrefab: {fileID: 2891224357653047317, guid: 53a977c2ee79f46be9cc0025dcfb54ef, type: 3}
+  _swapPrefab: {fileID: 5627772780052397232, guid: 2b7a042334bd34a6e850e0783d935710, type: 3}
+  _launchPrefab: {fileID: 5246701702524191885, guid: 2d8dd050bd112420785b224c4b9dc2b0, type: 3}
+  _binaryPrefab: {fileID: 5627772780052397232, guid: 6cd17d6bd0db148188a4edc6ebbca386, type: 3}
+  _countdownPrefab: {fileID: 5627772780052397232, guid: c44628913cda74ad4b9e83be20e7c793, type: 3}
+  _splitterPrefab: {fileID: 0}
+  _portalPrefab: {fileID: 5627772780052397232, guid: 9a1c9c3c1336641e8bd1be8f1cc3ee80, type: 3}
+  _scoringPrefab: {fileID: 2891224357653047317, guid: 4ce3851bb777c854baab83ae32578a2e, type: 3}
+  _flagPrefab: {fileID: 7708956291022191099, guid: 3f1b307ec58d1254eb7e77c1cffd7581, type: 3}

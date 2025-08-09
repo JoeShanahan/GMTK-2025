@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11da671aa998b48029bd7eaea7bb93dd, type: 3}
-  m_Name: PrefabFactory
+  m_Name: Prefabs
   m_EditorClassIdentifier: 
   _loopPrefab: {fileID: 4432792192646503738, guid: 64f2cf9a56ec24e29a1ed56d4f280b63, type: 3}
   _projectilePrefab: {fileID: 2891224357653047317, guid: 53a977c2ee79f46be9cc0025dcfb54ef, type: 3}
