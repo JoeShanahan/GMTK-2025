@@ -35,6 +35,7 @@ namespace Gmtk2025
         private int _neededScore;
         private int _currentScore;
 
+        public IEnumerable<Projectile> AllProjectiles => _projectiles;
         public IEnumerable<Connector> AllConnectors => _connectors;
         public IEnumerable<PlacedLoop> AllLoops => _loops;
         
@@ -43,8 +44,12 @@ namespace Gmtk2025
         private const float PROJ_DISTANCE = -0.2f;
 
         private bool _isPlayingSolution;
+        [SerializeField]
         private LevelData _tempLevel;
 
+        [SerializeField]
+        private bool _isEditMode;
+        
         private List<LevelData> _undoHistory = new();
 
         public Rect GetLevelBounds()
@@ -115,14 +120,17 @@ namespace Gmtk2025
             {
                 _currentLevel = _levelDataHolder.CurrentLevel;
                 SpawnLevel(_currentLevel, true);
+                _gameEditUI.SetBackground(_currentLevel.Background);
 
                 foreach (Projectile proj in _projectiles)
                 {
                     proj.Freeze();
                 }
+                
+                FindFirstObjectByType<CameraLevelFramer>().SnapFrameLevel();
 
                 _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-                _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+                _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             }
             else
             {
@@ -136,12 +144,16 @@ namespace Gmtk2025
         {
             AddToUndoHistory();
 
+            Vector3 position = p.transform.position;
+            
             if (p is Projectile proj)
             {
+                position.z = PROJ_DISTANCE;
                 _projectiles.Add(proj);
             }
             else if (p is PlacedLoop loop)
             {
+                position.z = LOOP_DISTANCE;
                 _loops.Add(loop);
                 RefreshAllConnections();
 
@@ -156,6 +168,7 @@ namespace Gmtk2025
             }
             else if (p is Connector conn)
             {
+                position.z = CONN_DISTANCE;
                 _connectors.Add(conn);
                 RefreshAllConnections();
                 
@@ -170,12 +183,18 @@ namespace Gmtk2025
             }
             else if (p is Scoring scor)
             {
+                position.z = CONN_DISTANCE;
                 _scoring.Add(scor);
                 Debug.Log("Adding scoring item to scene");
             }
 
+            p.transform.position = position;
+            
             p.SetAsPlayerPlaced();
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public LevelData ConvertScreenToLevelData()
@@ -315,6 +334,9 @@ namespace Gmtk2025
             }
             
             Destroy(p.gameObject);
+            
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public void Undo()
@@ -332,12 +354,15 @@ namespace Gmtk2025
             SpawnLevel(prev);
             _currentLevel.LoopInventory = prev.LoopInventory;
             _currentLevel.ConnectorInventory = prev.ConnectorInventory;
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
 
             foreach (Projectile proj in _projectiles)
             {
                 proj.Freeze();
             }
+            
+            if (_gameEditUI != null)
+                FindFirstObjectByType<CameraLevelFramer>().FramePressed();
         }
 
         public void SoftReset()
@@ -369,7 +394,7 @@ namespace Gmtk2025
             ClearEverything();
             SpawnLevel(newLevel, true);
             _gameEditUI?.UpdateScore(_currentScore, _neededScore);
-            _gameEditUI.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
+            _gameEditUI?.SetInventory(_currentLevel.LoopInventory, _currentLevel.ConnectorInventory);
             
             foreach (Projectile proj in _projectiles)
             {
@@ -449,7 +474,7 @@ namespace Gmtk2025
             
             foreach (var loopData in level.Loops)
             {
-                if (isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
+                if (!_isEditMode && isHardReset && !loopData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
                     _currentLevel.LoopInventory.Add(loopData.Radius);
                 }
@@ -465,7 +490,7 @@ namespace Gmtk2025
             
             foreach (var connData in level.Connectors)
             {
-                if (isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
+                if (!_isEditMode && isHardReset && !connData.Flags.HasFlag(LevelDataFlags.StartWith))
                 {
                     _currentLevel.ConnectorInventory.Add(new ConnectorItem
                     {

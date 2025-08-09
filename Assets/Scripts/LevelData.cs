@@ -47,7 +47,8 @@ namespace Gmtk2025
         public List<ProjectileData> Scoring = new();
         public List<LoopData> Loops = new();
         public List<ConnectorData> Connectors = new();
-
+        public Sprite Background;
+        
         [NonSerialized] public List<float> LoopInventory = new();
 
         [NonSerialized] public List<ConnectorItem> ConnectorInventory = new();

@@ -15,7 +15,7 @@ namespace Gmtk2025.Connectors
         public Sprite sprite2;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
-        private bool isSprite1Active = true;
+        //private bool isSprite1Active = true;
         
         public override ConnectorType Type => ConnectorType.Binary;
         public override int IntValue => _startsOn ? 1 : 0;
@@ -33,26 +33,20 @@ namespace Gmtk2025.Connectors
 
         private void SetColor()
         {
-            _sprite.color = _canGo ? _goColor : _stopColor;
+            spriteRenderer.sprite = _canGo ? sprite2 : sprite1;
         }
         
         public override void OnProjectilePassed(Projectile projectile, PlacedLoop currentLoop)
         {
+            if (_loopA == null || _loopB == null)
+            {
+                return;
+            }
+            
             if (_canGo)
             {
                 PlacedLoop toLoop = currentLoop == _loopA ? _loopB : _loopA;
                 projectile.SwapBetweenLoops(currentLoop, toLoop);
-
-                // Swap Sprites
-                if (isSprite1Active)
-                {
-                    spriteRenderer.sprite = sprite2;
-                    isSprite1Active = false;
-                } else
-                {
-                    spriteRenderer.sprite = sprite1;
-                    isSprite1Active = true;
-                }
             }
 
             _canGo = !_canGo;
